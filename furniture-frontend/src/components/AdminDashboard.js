@@ -17,12 +17,12 @@ const AdminDashboard = () => {
   ];
 
   const deviceData = [
-    { name: 'Mon', power: 200 },
-    { name: 'Tue', power: 300 },
-    { name: 'Wed', power: 400 },
-    { name: 'Thu', power: 500 },
-    { name: 'Fri', power: 450 },
-    { name: 'Sat', power: 220 },
+    { name: 'Mon', Sales: 200 },
+    { name: 'Tue', Sales: 300 },
+    { name: 'Wed', Sales: 400 },
+    { name: 'Thu', Sales: 500 },
+    { name: 'Fri', Sales: 450 },
+    { name: 'Sat', Sales: 220 },
   ];
 
   return (
