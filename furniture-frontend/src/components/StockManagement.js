@@ -22,23 +22,46 @@ const StockManagement = () => {
     }
   };
 
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'name':
+        return value.trim() ? '' : 'Product name is required';
+      case 'category':
+        return value ? '' : 'Please select a category';
+      case 'subcategory':
+        return value ? '' : 'Please select a subcategory';
+      case 'price':
+        return value > 0 ? '' : 'Price must be a positive number';
+      case 'stockQuantity':
+        return value > 0 ? '' : 'Stock quantity cannot be negative';
+      case 'imageUrl':
+        return value && !/^https?:\/\/.+/i.test(value) ? 'Invalid URL format' : '';
+      default:
+        return '';
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProductData({
       ...productData,
       [name]: value,
     });
+
+    // Validate field on input change
+    const errorMessage = validateField(name, value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: errorMessage,
+    }));
   };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!productData.name.trim()) newErrors.name = 'Product name is required';
-    if (productData.category === '') newErrors.category = 'Please select a category';
-    if (productData.subcategory === '') newErrors.subcategory = 'Please select a subcategory';
-    if (productData.price <= 0) newErrors.price = 'Price must be a positive number';
-    if (productData.stockQuantity < 0) newErrors.stockQuantity = 'Stock quantity cannot be negative';
-    if (productData.imageUrl && !/^https?:\/\/.+/i.test(productData.imageUrl))
-      newErrors.imageUrl = 'Invalid URL format';
+    Object.keys(productData).forEach((key) => {
+      const errorMessage = validateField(key, productData[key]);
+      if (errorMessage) newErrors[key] = errorMessage;
+    });
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -233,6 +256,8 @@ const StockManagement = () => {
                   value={productData.price}
                   onChange={handleInputChange}
                   required
+                  min="0.01"
+                  step="0.01"
                 />
                 {errors.price && <p className="error">{errors.price}</p>}
               </div>
@@ -247,6 +272,7 @@ const StockManagement = () => {
                   value={productData.stockQuantity}
                   onChange={handleInputChange}
                   required
+                  min="0"
                 />
                 {errors.stockQuantity && <p className="error">{errors.stockQuantity}</p>}
               </div>
@@ -269,12 +295,13 @@ const StockManagement = () => {
           )}
 
           {activeView === 'view' && (
-            <div className="product-table-container">
-              <table className="product-table">
+            <div className="product-list">
+              <h2>Products</h2>
+              <table>
                 <thead>
                   <tr>
                     <th>Image</th>
-                    <th>Product Name</th>
+                    <th>Name</th>
                     <th>Description</th>
                     <th>Category</th>
                     <th>Subcategory</th>
@@ -284,35 +311,22 @@ const StockManagement = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {products.length > 0 ? (
-                    products.map((product) => (
-                      <tr key={product.id}>
-                        <td>
-                          {product.imageUrl && (
-                            <img src={product.imageUrl} alt={product.name} width="50" />
-                          )}
-                        </td>
-                        <td>{product.name}</td>
-                        <td>{product.description}</td>
-                        <td>{product.category}</td>
-                        <td>{product.subcategory}</td>
-                        <td>${product.price}</td>
-                        <td>{product.stockQuantity}</td>
-                        <td>
-                          <button
-                            className="delete-button"
-                            onClick={() => handleDelete(product._id)}
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="8">No products found.</td>
+                  {products.map((product) => (
+                    <tr key={product._id}>
+                      <td>
+                        <img src={product.imageUrl} alt={product.name} className="product-image" />
+                      </td>
+                      <td>{product.name}</td>
+                      <td>{product.description}</td>
+                      <td>{product.category}</td>
+                      <td>{product.subcategory}</td>
+                      <td>Rs. {product.price.toFixed(2)}</td>
+                      <td>{product.stockQuantity}</td>
+                      <td>
+                        <button onClick={() => handleDelete(product._id)}>Delete</button>
+                      </td>
                     </tr>
-                  )}
+                  ))}
                 </tbody>
               </table>
             </div>
