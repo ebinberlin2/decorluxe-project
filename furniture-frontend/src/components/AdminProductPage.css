@@ -28,9 +28,9 @@
     background-color: #000000;
   }
   
-  .product-table tr:hover {
+  /* .product-table tr:hover {
     background-color: #d2ec93;
-  }
+  } */
   
   .product-image {
     width: 50px; /* Adjust size as needed */

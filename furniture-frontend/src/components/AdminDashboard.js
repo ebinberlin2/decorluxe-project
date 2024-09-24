@@ -48,9 +48,9 @@ const AdminDashboard = () => {
 
       {/* Main Dashboard */}
       <div className="admin-main-dashboard">
-        <header className="admin-dashboard-header">
+        {/* <header className="admin-dashboard-header">
           <button className="admin-primary-btn">+ Add New Product</button>
-        </header>
+        </header> */}
 
         {/* Dashboard Stats */}
         <div className="admin-dashboard-stats">
@@ -93,7 +93,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="admin-device-consumption card">
-            <h2>Device Power Consumption</h2>
+            <h2>Weekday Sales</h2>
             <BarChart
               width={400}
               height={250}
