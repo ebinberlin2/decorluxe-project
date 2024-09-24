@@ -1,0 +1,39 @@
+.admin-product-page {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .product-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+  }
+  
+  .product-table th, .product-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .product-table th {
+    background-color: #020202;
+  }
+  
+  .product-table tr:nth-child(even) {
+    background-color: #000000;
+  }
+  
+  .product-table tr:hover {
+    background-color: #d2ec93;
+  }
+  
+  .product-image {
+    width: 50px; /* Adjust size as needed */
+    height: auto;
+  }
+  

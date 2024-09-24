@@ -1,0 +1,148 @@
+/* AdminDashboard.css */
+
+.admin-dashboard-container {
+  display: flex;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+}
+
+.admin-sidebar {
+  width: 250px;
+  background-color: #20232a;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 800px;
+}
+
+.admin-logo-section {
+  text-align: center;
+  padding: 20px;
+}
+
+.admin-logo-section h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #61dafb;
+}
+
+.admin-menu-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-menu-section ul li {
+  padding: 15px 20px;
+  color: #bbb;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.admin-menu-section ul li.active,
+.admin-menu-section ul li:hover {
+  background-color: #333842;
+  color: #fff;
+}
+
+.admin-menu-section ul li a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.admin-main-dashboard {
+  flex: 1;
+  padding: 20px;
+  background-color: #f5f7fa;
+  overflow-y: auto;
+}
+
+.admin-dashboard-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 0;
+}
+
+.admin-primary-btn {
+  background-color: #61dafb;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.admin-primary-btn:hover {
+  background-color: #4fb7e6;
+}
+
+.admin-dashboard-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.admin-stat-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  flex: 1;
+  margin-right: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-stat-card h3 {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.admin-stat-card h1 {
+  font-size: 36px;
+  color: #333;
+}
+
+.admin-stat-card:last-child {
+  margin-right: 0;
+}
+
+.admin-performance-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.admin-sales-performance,
+.admin-device-consumption {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 48%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-sales-performance h2,
+.admin-device-consumption h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard-container {
+    flex-direction: column;
+  }
+
+  .admin-main-dashboard {
+    padding: 10px;
+  }
+
+  .admin-performance-section {
+    flex-direction: column;
+  }
+
+  .admin-sales-performance,
+  .admin-device-consumption {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
