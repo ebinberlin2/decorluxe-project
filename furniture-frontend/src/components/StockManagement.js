@@ -33,7 +33,7 @@ const StockManagement = () => {
       case 'price':
         return value > 0 ? '' : 'Price must be a positive number';
       case 'stockQuantity':
-        return value > 0 ? '' : 'Stock quantity cannot be negative';
+        return value > 0 ? '' : 'Stock quantity cannot be negative and zero';
       case 'imageUrl':
         return value && !/^https?:\/\/.+/i.test(value) ? 'Invalid URL format' : '';
       default:
