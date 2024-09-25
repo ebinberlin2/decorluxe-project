@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './Login.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Make sure to include this CSS
 import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -25,22 +27,45 @@ function Login() {
     try {
       const response = await axios.post('http://localhost:5000/api/login', formData);
       
-      // If the login is successful, store the token in localStorage
       if (response.status === 200) {
-        const { token } = response.data; // Assuming the response contains a JWT token
-        localStorage.setItem('authToken', token); // Store the token in localStorage
-        navigate('/'); // Redirect to the home page or wherever you'd like
-      } else {
-        alert("Login failed");
+        const { token } = response.data; 
+        localStorage.setItem('authToken', token);
+
+        // Show success toast
+        toast.success("Login successful!", {
+          position: "top-center",
+          autoClose: 3000 // Display for 3 seconds
+        });
+
+        // Delay navigation to allow the toast to be seen
+        setTimeout(() => {
+          navigate('/'); // Redirect to the home page
+        }, 3000); // Same duration as the toast duration
       }
     } catch (error) {
       console.error("Error during login:", error.response ? error.response.data : error.message);
-      alert("An error occurred");
+      if (error.response && error.response.status === 404) {
+        toast.error("User doesn't exist", {
+          position: "top-center",
+          autoClose: 3000
+        });
+      } else if (error.response && error.response.status === 401) {
+        toast.error("Invalid credentials", {
+          position: "top-center",
+          autoClose: 3000
+        });
+      } else {
+        toast.error("An error occurred. Please try again.", {
+          position: "top-center",
+          autoClose: 3000
+        });
+      }
     }
   };
 
   return (
     <div className="login-container">
+      <ToastContainer /> {/* Add ToastContainer here */}
       <div className="left-section">
         <div className="character"></div>
       </div>
@@ -73,7 +98,7 @@ function Login() {
             <button type="submit" className="login-button">Login</button>
           </form>
           <p className="signup-text">
-            Don’t have an account? <a href="/">Sign Up</a>
+            Don’t have an account? <a href="/signup">Sign Up</a>
           </p>
         </div>
       </div>

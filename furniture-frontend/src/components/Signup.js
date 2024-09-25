@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './Signup.css';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -26,7 +28,7 @@ function Signup() {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -41,12 +43,12 @@ function Signup() {
       if (response.status === 200) {
         setEmail(formData.email); // Save the email for later OTP verification
         setStep(2); // Move to OTP verification step
-        alert("OTP sent to your email");
+        toast.success("OTP sent to your email");
       } else {
-        alert("Signup failed");
+        toast.error("Signup failed");
       }
     } catch (error) {
-      alert("An error occurred");
+      toast.error("An error occurred during signup");
     }
   };
 
@@ -60,18 +62,22 @@ function Signup() {
       });
 
       if (response.status === 200) {
-        alert("Signup complete");
-        navigate('/'); // Redirect after successful signup
+        toast.success("Signup complete"); // Show success toast
+        // Delay navigation to allow toast to be displayed
+        setTimeout(() => {
+          navigate('/login'); // Redirect to login page after successful signup
+        }, 2000); // 2 seconds delay
       } else {
-        alert("OTP verification failed");
+        toast.error("Invalid OTP"); // Show error toast
       }
     } catch (error) {
-      alert("An error occurred during OTP verification");
+      toast.error("An error occurred during OTP verification"); // Show error toast
     }
   };
 
   return (
     <div className="signup-container">
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} closeOnClick={true} draggable={true} />
       <div className="left-section">
         <div className="character"></div>
       </div>

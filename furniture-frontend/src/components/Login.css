@@ -130,3 +130,10 @@ body {
     border: 1px solid #ccc;
   }
   
+  /* Login.css */
+
+.error-text {
+  color: red; /* Change to your preferred error color */
+  font-size: 0.9rem; /* Smaller font size for error messages */
+  margin-top: 5px; /* Add some spacing */
+}
