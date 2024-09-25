@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './AdminProductPage.css'; // Ensure the CSS file is linked
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const AdminProductPage = () => {
   const [products, setProducts] = useState([]);
@@ -19,39 +19,50 @@ const AdminProductPage = () => {
   };
 
   return (
-    <div className="admin-product-page">
-      <h1>All Products</h1>
+    <div className="container mt-4">
+      <h1 className="text-center text-white mb-4">All Products</h1>
       {products.length > 0 ? (
-        <table className="product-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Category</th>
-              <th>Subcategory</th>
-              <th>Price</th>
-              <th>Stock Quantity</th>
-              <th>Image</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr key={product._id}>
-                <td>{product.name}</td>
-                <td>{product.description}</td>
-                <td>{product.category}</td>
-                <td>{product.subcategory}</td>
-                <td>${product.price.toFixed(2)}</td>
-                <td>{product.stockQuantity}</td>
-                <td>{product.imageUrl && <img src={product.imageUrl} alt={product.name} className="product-image" />}</td>
-                <td>{product.status}</td>
+        <div className="table-responsive">
+          <table className="table table-dark table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Subcategory</th>
+                <th>Price</th>
+                <th>Stock Quantity</th>
+                <th>Image</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {products.map((product) => (
+                <tr key={product._id}>
+                  <td>{product.name}</td>
+                  <td>{product.description}</td>
+                  <td>{product.category}</td>
+                  <td>{product.subcategory}</td>
+                  <td>${product.price.toFixed(2)}</td>
+                  <td>{product.stockQuantity}</td>
+                  <td>
+                    {product.imageUrl && (
+                      <img
+                        src={product.imageUrl}
+                        alt={product.name}
+                        className="img-fluid"
+                        style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                      />
+                    )}
+                  </td>
+                  <td>{product.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
-        <p>No products available</p>
+        <p className="text-white">No products available</p>
       )}
     </div>
   );

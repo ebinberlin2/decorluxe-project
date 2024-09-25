@@ -17,21 +17,19 @@ import ProductDetails from './components/ProductDetails';
 
 const App = () => (
   <Router>
-    <Header />
-    <main>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/seller" element={<Seller />} />
-        <Route path="/stocks" element={<StockManagement />} />
-        <Route path="/admin" element={<Dashboard />} />
-        <Route path="/admin/products" element={<AdminProductPage />} />
-        <Route path="/products" element={<CategoriesPage />} />
-        <Route path="/products/:id" element={<ProductDetails />} />  {/* Single route for product details */}
-      </Routes>
-    </main>
+    {/* Conditional Rendering of Header */}
+    <Routes>
+      <Route path="/" element={<><Header /><Home /></>} />
+      <Route path="/products" element={<><Header /><CategoriesPage /></>} />
+      <Route path="/wishlist" element={<Wishlist />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/seller" element={<Seller />} />
+      <Route path="/stocks" element={<StockManagement />} />
+      <Route path="/admin" element={<Dashboard />} />
+      <Route path="/admin/products" element={<AdminProductPage />} />
+      <Route path="/products/:id" element={<><Header /><ProductDetails /></>} />  {/* Including Header here */}
+    </Routes>
   </Router>
 );
 
