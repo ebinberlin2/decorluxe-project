@@ -5,12 +5,14 @@
   align-items: center;
   padding: 20px;
   font-family: Arial, sans-serif;
+  color: white; /* Set default text color to white */
 }
 
 /* Page header */
 .page-header {
   text-align: center;
   margin-bottom: 20px;
+  color: white; /* Ensures header text is white */
 }
 
 .main-container {
@@ -35,6 +37,7 @@
   background-color: #000000;
   margin-bottom: 10px;
   text-align: center;
+  color: white; /* Sidebar text color */
 }
 
 .sidebar li.active {
@@ -44,12 +47,14 @@
 
 .content {
   flex: 1;
+  color: white; /* Set content text color to white */
 }
 
 .stock-form {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
+  color: white; /* Set form text color to white */
 }
 
 .form-group {
@@ -59,6 +64,7 @@
 .form-group label {
   display: block;
   margin-bottom: 5px;
+  color: white; /* Set label text color to white */
 }
 
 .form-group input,
@@ -83,9 +89,11 @@ button[type="submit"]:hover {
 
 .product-list {
   width: 100%;
+  color: white; /* Set product list text color to white */
 }
 
 .product-list h2 {
+  color: white;
   text-align: center;
   margin-bottom: 20px;
 }
@@ -93,19 +101,22 @@ button[type="submit"]:hover {
 .product-list table {
   width: 100%;
   border-collapse: collapse;
+  color: white; /* Ensure table text is white */
 }
 
 .product-list th,
 .product-list td {
   padding: 12px 15px;
   border: 1px solid #ddd;
+  color: white; /* Ensure table header and row text is white */
   text-align: left;
 }
 
 .product-list th {
-  background-color: #030303;
+  background-color: #000000;
   font-weight: bold;
   text-align: center;
+  color: white; /* Ensure table header text is white */
 }
 
 .product-list td {
