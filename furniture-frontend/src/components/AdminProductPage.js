@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './AdminProductPage.css'; // Ensure this import is uncommented
+import './AdminProductPage.css'; // Ensure the CSS file is linked
 
 const AdminProductPage = () => {
   const [products, setProducts] = useState([]);

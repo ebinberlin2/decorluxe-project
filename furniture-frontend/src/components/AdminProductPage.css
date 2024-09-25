@@ -1,39 +1,67 @@
+/* Dark theme background and overall layout */
 .admin-product-page {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .product-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0 auto;
-  }
-  
-  .product-table th, .product-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-  }
-  
-  .product-table th {
-    background-color: #020202;
-  }
-  
-  .product-table tr:nth-child(even) {
-    background-color: #000000;
-  }
-  
-  /* .product-table tr:hover {
-    background-color: #d2ec93;
-  } */
-  
-  .product-image {
-    width: 50px; /* Adjust size as needed */
-    height: auto;
-  }
-  
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: #1e1e1e; /* Dark background */
+  color: #fff; /* White text */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for contrast */
+}
+
+.admin-product-page h1 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #fff; /* Heading in white */
+}
+
+/* Table design */
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.product-table th,
+.product-table td {
+  border: 1px solid #444; /* Darker border */
+  padding: 4px 8px; /* Reduced padding */
+  text-align: left;
+  line-height: 1.2; /* Reduced line height for smaller rows */
+}
+
+.product-table th {
+  background-color: #333; /* Darker table header */
+  font-weight: bold;
+  color: #ccc; /* Lighter header text */
+}
+
+.product-table td {
+  background-color: #2a2a2a; /* Darker table rows */
+  vertical-align: middle;
+}
+
+.product-table tr:nth-child(even) {
+  background-color: #3a3a3a; /* Slightly different shade for even rows */
+}
+
+.product-table tr:hover {
+  background-color: #444; /* Hover effect for rows */
+}
+
+/* Image styling */
+.product-image {
+  width: 40px; /* Smaller image */
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+/* No products message */
+.no-products {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 18px;
+  color: #999; /* Light gray for empty state */
+}
