@@ -85,7 +85,7 @@ function Signup() {
         <div className="form-container">
           {step === 1 ? (
             <>
-              <h2>Create your account<br /><span>to join us today</span></h2>
+              <h2>Join Our Family<br /><span>to join us today</span></h2>
               <form className="signup-form" onSubmit={handleSubmit}>
                 <input
                   type="text"

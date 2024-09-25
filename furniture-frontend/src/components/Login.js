@@ -71,7 +71,7 @@ function Login() {
       </div>
       <div className="right-section">
         <div className="form-container">
-          <h2>Decide faster <br /><span>so you can do more</span></h2>
+          <h2>Welcome Back! <br /><span>so you can do more</span></h2>
           <button className="google-login-button">
             <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo" />
             Login with Google
