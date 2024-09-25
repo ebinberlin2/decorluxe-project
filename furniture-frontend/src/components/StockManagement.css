@@ -1,3 +1,13 @@
+/* Main container styling */
+.stock-management-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Page header */
 .page-header {
   text-align: center;
   margin-bottom: 20px;
@@ -5,32 +15,41 @@
 
 .main-container {
   display: flex;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .sidebar {
-  width: 20%;
-  background-color: #f4f4f4;
-  padding: 10px;
+  width: 200px;
+  margin-right: 20px;
 }
 
 .sidebar ul {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
 }
 
-.sidebar ul li {
-  padding: 10px;
+.sidebar li {
   cursor: pointer;
+  padding: 10px;
+  background-color: #000000;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
-.sidebar ul li.active {
+.sidebar li.active {
   background-color: #007bff;
   color: white;
 }
 
 .content {
-  width: 80%;
-  padding: 20px;
+  flex: 1;
+}
+
+.stock-form {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .form-group {
@@ -43,43 +62,75 @@
 }
 
 .form-group input,
-.form-group textarea,
-.form-group select {
+.form-group select,
+.form-group textarea {
   width: 100%;
   padding: 8px;
-  margin-top: 5px;
   box-sizing: border-box;
+}
+
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.product-list {
+  width: 100%;
+}
+
+.product-list h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.product-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.product-list th,
+.product-list td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.product-list th {
+  background-color: #030303;
+  font-weight: bold;
+  text-align: center;
+}
+
+.product-list td {
+  text-align: center;
+}
+
+.product-list img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+button {
+  background-color: #dc3545;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #c82333;
 }
 
 .error {
   color: red;
   font-size: 12px;
-}
-
-.product-table-container {
-  margin-top: 20px;
-}
-
-.product-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.product-table th,
-.product-table td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: left;
-}
-
-.product-table img {
-  max-width: 50px;
-}
-
-.delete-button {
-  background-color: #ff4d4d;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  cursor: pointer;
 }

@@ -60,7 +60,7 @@ const ProductDetails = () => {
         </div>
 
         {/* Additional Sections */}
-        <div className="additional-info">
+        {/* <div className="additional-info">
           <h2>Product Details</h2>
           <p>{product.details || 'No additional details available.'}</p>
           
@@ -83,7 +83,7 @@ const ProductDetails = () => {
               <p>No reviews yet.</p>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
