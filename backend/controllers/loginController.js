@@ -1,4 +1,5 @@
 import User from '../models/UserModel.js';
+import Seller from '../models/SellerModel.js';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 
@@ -6,15 +7,20 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Find the user by email
+    // First, try finding the user by email in both User and Seller collections
     const user = await User.findOne({ email });
-    
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+    const seller = await Seller.findOne({ email });
+
+    // Check if the account is either a user or a seller
+    if (!user && !seller) {
+      return res.status(404).json({ message: 'Account not found' });
     }
 
+    const account = user || seller;  // Determine whether it's a user or seller
+    const role = user ? 'user' : 'seller'; // Identify the role for JWT
+
     // Verify the password using argon2
-    const isMatch = await argon2.verify(user.password, password);
+    const isMatch = await argon2.verify(account.password, password);
 
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -22,20 +28,21 @@ export const login = async (req, res) => {
 
     // Generate JWT token on successful login
     const token = jwt.sign(
-      { id: user._id, email: user.email }, 
+      { id: account._id, email: account.email, role }, // Add the role in the payload
       process.env.JWT_SECRET, 
       { expiresIn: '1h' }  // Token expiration (adjust as needed)
     );
 
-    // Send response with token and user data (omit password)
+    // Send response with token and user/seller data (omit password)
     res.status(200).json({
       message: 'Login successful',
       token,
-      user: {
-        id: user._id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName
+      role,  // Pass the role directly in the response
+      account: {
+        id: account._id,
+        email: account.email,
+        firstName: account.firstName,
+        lastName: account.lastName,
       },
     });
 

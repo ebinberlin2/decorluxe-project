@@ -10,40 +10,95 @@ function Login() {
     email: '',
     password: ''
   });
+  
+  const [errors, setErrors] = useState({
+    email: '',
+    password: ''
+  });
 
+  const [isSubmitting, setIsSubmitting] = useState(false); // To track submission
   const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 6;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
     setFormData({
       ...formData,
       [name]: value
     });
+
+    if (name === 'email') {
+      if (!validateEmail(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: 'Please enter a valid email address'
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: ''
+        }));
+      }
+    } else if (name === 'password') {
+      if (!validatePassword(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          password: 'Password must be at least 6 characters long'
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          password: ''
+        }));
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+  
+    if (errors.email || errors.password || !formData.email || !formData.password) {
+      toast.error("Please fix the errors before submitting.", {
+        position: "top-center",
+        autoClose: 3000
+      });
+      return;
+    }
+  
+    setIsSubmitting(true); // Disable button and start submitting
+  
     try {
       const response = await axios.post('http://localhost:5000/api/login', formData);
-      
+  
       if (response.status === 200) {
-        const { token } = response.data; 
+        const { token, role } = response.data; // Accessing the role from response
         localStorage.setItem('authToken', token);
-
-        // Show success toast
+  
         toast.success("Login successful!", {
           position: "top-center",
-          autoClose: 3000 // Display for 3 seconds
+          autoClose: 3000
         });
-
+  
         // Delay navigation to allow the toast to be seen
         setTimeout(() => {
-          navigate('/'); // Redirect to the home page
+          if (role === 'seller') {
+            navigate('/seller'); // Redirect to Seller Dashboard
+          } else {
+            navigate('/'); // Redirect to Home for regular users
+          }
         }, 3000); // Same duration as the toast duration
       }
     } catch (error) {
-      console.error("Error during login:", error.response ? error.response.data : error.message);
+      setIsSubmitting(false); // Re-enable button on error
       if (error.response && error.response.status === 404) {
         toast.error("User doesn't exist", {
           position: "top-center",
@@ -62,17 +117,17 @@ function Login() {
       }
     }
   };
-
+  
   return (
     <div className="login-container">
-      <ToastContainer /> {/* Add ToastContainer here */}
+      <ToastContainer />
       <div className="left-section">
         <div className="character"></div>
       </div>
       <div className="right-section">
         <div className="form-container">
           <h2>Welcome Back! <br /><span>so you can do more</span></h2>
-          <button className="google-login-button">
+          <button className="google-login-button" disabled={isSubmitting}>
             <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo" />
             Login with Google
           </button>
@@ -86,6 +141,7 @@ function Login() {
               onChange={handleChange}
               required
             />
+            {errors.email && <p className="error-text">{errors.email}</p>}
             <input
               type="password"
               name="password"
@@ -94,8 +150,11 @@ function Login() {
               onChange={handleChange}
               required
             />
+            {errors.password && <p className="error-text">{errors.password}</p>}
             <a href="/" className="forgot-password">Forgot password?</a>
-            <button type="submit" className="login-button">Login</button>
+            <button type="submit" className="login-button" disabled={isSubmitting}>
+              {isSubmitting ? 'Logging in...' : 'Login'}
+            </button>
           </form>
           <p className="signup-text">
             Don’t have an account? <a href="/signup">Sign Up</a>

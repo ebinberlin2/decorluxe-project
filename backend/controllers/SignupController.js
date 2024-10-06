@@ -63,12 +63,13 @@ export const verifySignupOtp = async (req, res) => {
     try {
       const hashedPassword = await argon2.hash(user.password);
 
-      // Save the user in the database
+      // Save the user in the database with default status 'active' and role 'user'
       const newUser = new User({
         firstName: user.firstName,
         lastName: user.lastName,
         email: email,
         password: hashedPassword,
+        // status and role will be automatically set to 'active' and 'user' by default
       });
 
       await newUser.save();
