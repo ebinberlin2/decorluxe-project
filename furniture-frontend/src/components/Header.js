@@ -20,12 +20,25 @@ const Dropdown = ({ isOpen, toggleDropdown, loggedIn, handleLogout }) => (
             <div className="dropdown-content">
                 {loggedIn ? (
                     <>
-                        <button onClick={handleLogout} className="dropdown-item">Logout</button>
+                        <Link to="/profile" className="dropdown-item">
+                            <CgProfile size={20} />
+                            Profile View
+                        </Link>
+                        <button onClick={handleLogout} className="dropdown-item">
+                            <CgProfile size={20} />
+                            Logout
+                        </button>
                     </>
                 ) : (
                     <>
-                        <Link to="/login" className="dropdown-item">Login</Link>
-                        <Link to="/signup" className="dropdown-item">Signup</Link>
+                        <Link to="/login" className="dropdown-item">
+                            <CgProfile size={20} />
+                            Login
+                        </Link>
+                        <Link to="/signup" className="dropdown-item">
+                            <CgProfile size={20} />
+                            Signup
+                        </Link>
                     </>
                 )}
             </div>
@@ -38,39 +51,34 @@ const Header = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
 
-    // Toggle dropdown visibility
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
-    // Check login status from localStorage on component mount
     useEffect(() => {
-        const isLoggedIn = !!localStorage.getItem('authToken');  // Auth token stored in localStorage
+        const isLoggedIn = !!localStorage.getItem('authToken');
         setLoggedIn(isLoggedIn);
     }, []);
 
-    // Handle logout functionality
     const handleLogout = () => {
-        localStorage.removeItem('authToken');  // Remove the auth token from localStorage
-        setLoggedIn(false);  // Update the state to reflect the user is logged out
-        toast.success("Logging out...");  // Show toast message
+        localStorage.removeItem('authToken');
+        setLoggedIn(false);
+        toast.success("Logging out...");
         setTimeout(() => {
-            navigate('/login');  // Navigate after a delay
-        }, 2000);  // Delay for 2 seconds (2000ms)
+            navigate('/login');
+        }, 2000);
     };
 
     return (
         <>
             <header className="header-container navbar navbar-expand-lg navbar-light">
                 <div className="container d-flex align-items-center justify-content-between">
-                    {/* Left Side: Logo */}
                     <div className="navbar-brand">
                         <Link to="/" className="logo-link">
                             <img src={logo1} alt="Company Logo" className="logo" />
                         </Link>
                     </div>
 
-                    {/* Center: Navigation Links */}
                     <nav className="navbar-nav mx-auto">
                         <ul className="nav d-flex align-items-center">
                             <li className="nav-item">
@@ -88,7 +96,6 @@ const Header = () => {
                         </ul>
                     </nav>
 
-                    {/* Right Side: Search Bar and Icons */}
                     <div className="d-flex align-items-center">
                         <form className="search-bar">
                             <AiOutlineSearch size={20} className="search-icon" />
@@ -123,7 +130,7 @@ const Header = () => {
                     </div>
                 </div>
             </header>
-            <ToastContainer /> {/* Include ToastContainer for displaying toasts */}
+            <ToastContainer />
         </>
     );
 };

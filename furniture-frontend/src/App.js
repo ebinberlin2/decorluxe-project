@@ -16,6 +16,7 @@ import CategoriesPage from './components/CategoriesPage';
 import ProductDetails from './components/ProductDetails';
 import UserSignup from './components/Authentication/SignUp/UserSignup';
 import SellerSignup from './components/Authentication/SignUp/SellerSignup';
+import Profile from './components/Profile/Profile';
 
 const App = () => (
   <Router>
@@ -32,6 +33,7 @@ const App = () => (
       <Route path="/signup" element={<Signup />} />
       <Route path="/products/:id" element={<><Header /><ProductDetails /></>} /> 
       <Route path="/signupuser" element={<UserSignup />} />
+      <Route path="/profile" element={<Profile />} />
      <Route path="/signupseller" element={<SellerSignup />} /> {/* Including Header here */}
     </Routes>
   </Router>

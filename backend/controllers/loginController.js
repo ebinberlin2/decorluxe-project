@@ -33,17 +33,21 @@ export const login = async (req, res) => {
       { expiresIn: '1h' }  // Token expiration (adjust as needed)
     );
 
+    // Retrieve additional user or seller data
+    const userData = {
+      id: account._id,
+      email: account.email,
+      firstName: account.firstName,
+      lastName: account.lastName,
+      // Include any other necessary fields
+    };
+
     // Send response with token and user/seller data (omit password)
     res.status(200).json({
       message: 'Login successful',
       token,
       role,  // Pass the role directly in the response
-      account: {
-        id: account._id,
-        email: account.email,
-        firstName: account.firstName,
-        lastName: account.lastName,
-      },
+      account: userData, // Return the user or seller data
     });
 
   } catch (error) {

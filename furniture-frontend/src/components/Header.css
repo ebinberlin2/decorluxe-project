@@ -149,7 +149,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center !important;
 }
 
 /* Style the button and its label */
@@ -164,25 +164,40 @@
 
 /* Style the dropdown content */
 .dropdown-content {
+  align-items: ;
   display: block;
   position: absolute;
   top: 50px;
   right: 0;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #0a0a0a; /* Dark background for dropdown */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
-  min-width: 120px;
+  min-width: 160px;
   text-align: left;
   z-index: 1000;
 }
 
+/* Style dropdown items */
 .dropdown-content a {
-  padding: 10px 20px;
-  color: #333;
+  padding: 12px 16px; /* Adjusted padding for better spacing */
+  color: #f8f5f5; /* White font color */
   text-decoration: none;
-  display: block;
+  display: flex; /* Use flexbox to align icons and text */
+  align-items: center; /* Center vertically */
 }
 
+/* Add icons */
+.dropdown-content a .icon {
+  margin-right: 8px; /* Space between icon and text */
+  font-size: 18px; /* Adjust icon size */
+}
+
+/* Hover effect */
 .dropdown-content a:hover {
-  background-color: #f6f4f4;
+  background-color: #1a1a1a; /* Slightly lighter background on hover */
+}
+
+/* Hide dropdown content when not hovered */
+.dropdown-container:hover .dropdown-content {
+  display: block; /* Show on hover */
 }

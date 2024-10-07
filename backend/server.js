@@ -10,6 +10,7 @@ import adminRoutes from './routes/adminRoutes.js';
 import ProductReview from './routes/ProductReview.js';
 import WishlistRoutes from './routes/WishlistRoutes.js';
 import SellerRoutes from './routes/SellerRoutes.js';
+import auth from  './routes/auth.js';
 
 
 const app = express();
@@ -26,6 +27,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/products', ProductReview);
 app.use('/api/wishlist', WishlistRoutes); //
 app.use('/api/seller/signup', SellerRoutes); //
+app.use('/api/auth', auth);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
