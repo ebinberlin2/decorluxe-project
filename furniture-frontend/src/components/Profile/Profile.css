@@ -1,47 +1,45 @@
-/* src/components/Profile.css */
+/* Profile.css */
+
 body {
-    background-color: #121212; /* Dark background */
-    color: #ffffff; /* Light text color */
-    font-family: 'Arial', sans-serif; /* Font style */
-    margin: 0;
-    padding: 0;
+    background-color: #000000; /* Light background for a clean look */
+    color: #343a40; /* Dark text color */
 }
 
 .profile-container {
-    max-width: 600px;
-    margin: 50px auto; /* Center the profile */
-    padding: 20px;
-    background-color: #1e1e1e; /* Darker background for the container */
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+    max-width: 600px; /* Center the profile container */
+    margin: auto; /* Center align */
 }
 
-.profile-heading {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    text-align: center; /* Center the heading */
-    color: #00bcd4; /* Accent color */
+.card {
+    border-radius: 10px; /* Rounded corners for card */
 }
 
-.profile-info {
-    padding: 10px;
-    border-top: 1px solid #333; /* Divider line */
+.card-header {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: #ffffff; /* White text for header */
+    border-top-left-radius: 10px; /* Rounded corners for header */
+    border-top-right-radius: 10px; /* Rounded corners for header */
 }
 
-.profile-info p {
-    font-size: 1.2rem; /* Increase font size for info */
-    margin: 10px 0; /* Spacing for paragraphs */
+.card-body {
+    background-color: #ffffff; /* White background for card body */
 }
 
-.loading {
-    text-align: center;
-    margin-top: 50px;
-    font-size: 1.5rem;
+.form-label {
+    font-weight: bold; /* Bold for labels */
 }
 
-.error {
-    color: #ff4d4d; /* Red color for error message */
-    text-align: center;
-    margin-top: 50px;
-    font-size: 1.2rem;
+.btn-success {
+    background-color: #28a745; /* Green button color */
+    border: none; /* Remove border */
+}
+
+.btn-outline-danger {
+    color: #dc3545; /* Danger color for outline */
+    border-color: #dc3545; /* Border color matches danger color */
+}
+
+.btn-success:hover,
+.btn-outline-danger:hover {
+    opacity: 0.8; /* Slight opacity on hover */
 }

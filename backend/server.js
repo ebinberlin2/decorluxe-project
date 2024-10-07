@@ -11,6 +11,8 @@ import ProductReview from './routes/ProductReview.js';
 import WishlistRoutes from './routes/WishlistRoutes.js';
 import SellerRoutes from './routes/SellerRoutes.js';
 import auth from  './routes/auth.js';
+import userDetailsRouter from './routes/UserDetailsRoutes.js';
+
 
 
 const app = express();
@@ -28,6 +30,10 @@ app.use('/api/products', ProductReview);
 app.use('/api/wishlist', WishlistRoutes); //
 app.use('/api/seller/signup', SellerRoutes); //
 app.use('/api/auth', auth);
+app.use('/api/userDetails', userDetailsRouter);
+
+
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
