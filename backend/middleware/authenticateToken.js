@@ -14,4 +14,20 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+export const verifyToken = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1]; // Get token from authorization header
+
+  if (!token) {
+    return res.status(403).send("A token is required for authentication");
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // Add decoded user info to request object
+  } catch (err) {
+    return res.status(401).send("Invalid Token");
+  }
+  return next(); // Proceed to next middleware or route handler
+};
+
 export default authenticateToken;

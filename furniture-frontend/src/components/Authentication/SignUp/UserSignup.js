@@ -84,6 +84,8 @@ function UserSignup() {
       });
 
       if (response.status === 200) {
+        const { token } = response.data; // Receive token from response
+        localStorage.setItem('token', token); // Store token in local storage
         toast.success("Signup complete! Redirecting to login...");
         setTimeout(() => {
           navigate('/login');

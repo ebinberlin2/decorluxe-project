@@ -76,7 +76,7 @@ export const verifySignupOtp = async (req, res) => {
       delete otps[email]; // Clear OTP after verification
       delete users[email]; // Clear temporary user data
 
-      // Generate a JWT token (optional)
+      // Generate a JWT token
       const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
       res.status(200).json({ message: 'OTP verified, signup complete', token });

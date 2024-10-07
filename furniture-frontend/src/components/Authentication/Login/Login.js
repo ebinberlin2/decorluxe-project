@@ -1,65 +1,28 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Make sure to include this CSS
+import 'react-toastify/dist/ReactToastify.css'; 
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 function Login() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  
-  const [errors, setErrors] = useState({
-    email: '',
-    password: ''
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false); // To track submission
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({ email: '', password: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const navigate = useNavigate();
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validatePassword = (password) => {
-    return password.length >= 6;
-  };
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validatePassword = (password) => password.length >= 6;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     if (name === 'email') {
-      if (!validateEmail(value)) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          email: 'Please enter a valid email address'
-        }));
-      } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          email: ''
-        }));
-      }
+      setErrors((prev) => ({ ...prev, email: validateEmail(value) ? '' : 'Please enter a valid email address' }));
     } else if (name === 'password') {
-      if (!validatePassword(value)) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          password: 'Password must be at least 6 characters long'
-        }));
-      } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          password: ''
-        }));
-      }
+      setErrors((prev) => ({ ...prev, password: validatePassword(value) ? '' : 'Password must be at least 6 characters long' }));
     }
   };
 
@@ -67,53 +30,36 @@ function Login() {
     e.preventDefault();
   
     if (errors.email || errors.password || !formData.email || !formData.password) {
-      toast.error("Please fix the errors before submitting.", {
-        position: "top-center",
-        autoClose: 3000
-      });
+      toast.error("Please fix the errors before submitting.", { position: "top-center", autoClose: 3000 });
       return;
     }
   
-    setIsSubmitting(true); // Disable button and start submitting
+    setIsSubmitting(true); 
   
     try {
       const response = await axios.post('http://localhost:5000/api/login', formData);
   
       if (response.status === 200) {
-        const { token, role } = response.data; // Accessing the role from response
+        const { token, role } = response.data;
         localStorage.setItem('authToken', token);
   
-        toast.success("Login successful!", {
-          position: "top-center",
-          autoClose: 3000
-        });
+        toast.success("Login successful!", { position: "top-center", autoClose: 3000 });
   
-        // Delay navigation to allow the toast to be seen
         setTimeout(() => {
           if (role === 'seller') {
-            navigate('/seller'); // Redirect to Seller Dashboard
+            navigate('/seller'); 
           } else {
-            navigate('/'); // Redirect to Home for regular users
+            navigate('/'); 
           }
-        }, 3000); // Same duration as the toast duration
+        }, 3000);
       }
     } catch (error) {
-      setIsSubmitting(false); // Re-enable button on error
-      if (error.response && error.response.status === 404) {
-        toast.error("User doesn't exist", {
-          position: "top-center",
-          autoClose: 3000
-        });
-      } else if (error.response && error.response.status === 401) {
-        toast.error("Invalid credentials", {
-          position: "top-center",
-          autoClose: 3000
-        });
-      } else {
-        toast.error("An error occurred. Please try again.", {
-          position: "top-center",
-          autoClose: 3000
-        });
+      setIsSubmitting(false);
+      if (error.response) {
+        const errorMessage = error.response.status === 404 ? "User doesn't exist" :
+                             error.response.status === 401 ? "Invalid credentials" :
+                             "An error occurred. Please try again.";
+        toast.error(errorMessage, { position: "top-center", autoClose: 3000 });
       }
     }
   };
