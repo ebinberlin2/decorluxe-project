@@ -26,7 +26,8 @@ const App = () => (
       <Route path="/products" element={<><Header /><CategoriesPage /></>} />
       <Route path="/wishlist" element={<Wishlist />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/seller" element={<Seller />} />
+      
+<Route path="/seller" element={<><Header/><Seller /></>} />
       <Route path="/stocks" element={<StockManagement />} />
       <Route path="/admin" element={<Dashboard />} />
       <Route path="/admin/products" element={<AdminProductPage />} />
@@ -40,3 +41,6 @@ const App = () => (
 );
 
 export default App;
+
+<Route path="/seller" element={<><Header/><Seller /></>} />
+
