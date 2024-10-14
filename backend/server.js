@@ -11,6 +11,7 @@ import ProductReview from './routes/ProductReview.js';
 import WishlistRoutes from './routes/WishlistRoutes.js';
 import SellerRoutes from './routes/SellerRoutes.js';
 import auth from  './routes/auth.js';
+import  verifyToken  from './middleware/authenticateToken.js';
 import userDetailsRouter from './routes/UserDetailsRoutes.js';
 
 

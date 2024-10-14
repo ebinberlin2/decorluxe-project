@@ -1,6 +1,6 @@
 import express from "express";
 import { sendSignupOtp, verifySignupOtp } from '../controllers/signupController.js';
-import { verifyToken } from "../middleware/authenticateToken.js";
+import  verifyToken  from "../middleware/authenticateToken.js";
 
 
 const router = express.Router();

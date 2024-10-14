@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom';
 import { FaStar, FaCartPlus, FaHeart } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ProductDetails.css'; // Importing custom CSS
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -27,11 +30,46 @@ const ProductDetails = () => {
     }
   };
 
+  const addToWishlist = async (productId) => {
+    if (!productId) {
+      console.error('Product ID is required.');
+      toast.error('Product ID is required.', { position: 'top-center', autoClose: 3000 });
+      return;
+    }
+
+    const token = localStorage.getItem('authToken'); // Get the token from local storage
+
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/api/wishlist',
+        { productId }, // Ensure productId is being sent
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the headers
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        toast.success(response.data.message, { position: 'top-center', autoClose: 3000 });
+      }
+    } catch (error) {
+      if (error.response) {
+        const errorMessage =
+          error.response.status === 400
+            ? error.response.data.message
+            : 'An error occurred. Please try again.';
+        toast.error(errorMessage, { position: 'top-center', autoClose: 3000 });
+      }
+    }
+  };
+
   if (loading) return <div className="text-center my-5">Loading...</div>;
   if (error) return <div className="text-center text-danger my-5">{error}</div>;
 
   return (
     <>
+      <ToastContainer />
       <div className="container mt-5 mb-5">
         <div className="row shadow-lg rounded overflow-hidden bg-light">
           {/* Left Column: Product Image */}
@@ -69,7 +107,7 @@ const ProductDetails = () => {
 
             {/* Wishlist */}
             <div className="mb-4">
-              <button className="btn btn-outline-secondary">
+              <button className="btn btn-outline-secondary" onClick={() => addToWishlist(product._id)}>
                 <FaHeart className="mr-2" /> Add to Wishlist
               </button>
             </div>

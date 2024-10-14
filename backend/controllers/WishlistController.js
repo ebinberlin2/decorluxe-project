@@ -1,53 +1,47 @@
-// controllers/wishlistController.js
-import Wishlist from '../models/WishlistModel.js';
+// controllers/WishlistController.js
+import Wishlist from '../models/wishlist.js';
 
-// Fetch wishlist items for the logged-in user
-export const fetchWishlist = async (req, res) => {
-  const userId = req.user._id; // Get user ID from authenticated token
-  try {
-    const wishlist = await Wishlist.findOne({ userId }).populate('products');
-    if (!wishlist) {
-      return res.status(404).json({ message: 'Wishlist not found' });
-    }
-    return res.status(200).json(wishlist.products);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-// Add a product to the wishlist
 export const addToWishlist = async (req, res) => {
-  const userId = req.user._id;
   const { productId } = req.body;
+  const userId = req.user.id; // Assuming user ID is extracted from token
+
+  if (!productId) {
+    return res.status(400).json({ message: 'Product ID is required.' });
+  }
+
   try {
-    let wishlist = await Wishlist.findOne({ userId });
-    if (!wishlist) {
-      wishlist = new Wishlist({ userId, products: [productId] });
-    } else {
-      if (!wishlist.products.includes(productId)) {
-        wishlist.products.push(productId);
-      }
+    // Check if the item is already in the wishlist
+    const wishlistItem = await Wishlist.findOne({ user: userId, product: productId });
+
+    if (wishlistItem) {
+      return res.status(400).json({ message: 'Product is already in the wishlist.' });
     }
-    await wishlist.save();
-    return res.status(200).json({ message: 'Product added to wishlist' });
+
+    // Create a new wishlist item
+    const newWishlistItem = new Wishlist({
+      user: userId,     // Set the user ID
+      product: productId // Set the product ID
+    });
+
+    await newWishlistItem.save();
+
+    return res.status(201).json({ message: 'Product added to wishlist.' });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error('Error adding to wishlist:', error);
+    return res.status(500).json({ message: 'Failed to add to wishlist.' });
   }
 };
 
-// Remove a product from the wishlist
-export const removeFromWishlist = async (req, res) => {
-  const userId = req.user._id;
-  const { productId } = req.params;
+
+// Fetch user's wishlist
+export const getWishlist = async (req, res) => {
+  const userId = req.user.id; // Get user ID from the token
+
   try {
-    const wishlist = await Wishlist.findOne({ userId });
-    if (!wishlist) {
-      return res.status(404).json({ message: 'Wishlist not found' });
-    }
-    wishlist.products = wishlist.products.filter(id => id.toString() !== productId);
-    await wishlist.save();
-    return res.status(200).json({ message: 'Product removed from wishlist' });
+    const wishlistItems = await Wishlist.find({ userId });
+    res.status(200).json(wishlistItems);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error.' });
   }
 };
