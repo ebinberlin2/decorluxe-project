@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { FaHeart, FaShoppingCart, FaTrashAlt } from 'react-icons/fa';
+// Wishlist.js
+import React, { useEffect, useState } from 'react';
+import { FaTrash } from 'react-icons/fa';
 import axios from 'axios';
-import './WishlistPage.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const WishlistPage = () => {
+const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,86 +14,84 @@ const WishlistPage = () => {
     fetchWishlist();
   }, []);
 
-  // Fetch wishlist items for the logged-in user
   const fetchWishlist = async () => {
+    const token = localStorage.getItem('authToken');
+    console.log("Fetching wishlist with token:", token); // Check token value
+  
     try {
-      const token = localStorage.getItem('token');
-      const config = {
+      const response = await axios.get('http://localhost:5000/api/wishlist', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      };
-      const response = await axios.get('http://localhost:5000/api/wishlist', config);
+      });
+      console.log("Wishlist response:", response.data); // Log response data
       setWishlistItems(response.data);
     } catch (error) {
-      // Check if the error response exists and handle accordingly
-      if (error.response && error.response.data) {
-        setError('Error fetching wishlist items: ' + JSON.stringify(error.response.data)); // Stringify the error response data
-      } else {
-        setError('Error fetching wishlist items: ' + error.message); // Handle generic error
-      }
+      console.error('Error fetching wishlist:', error); // Log error
+      setError('Error fetching wishlist: ' + (error.response ? error.response.data.message : error.message));
     } finally {
       setLoading(false);
     }
   };
-  
-  // Remove item from wishlist
-  const removeFromWishlist = async (productId) => {
+  const removeFromWishlist = async (wishlistItemId) => {
+    const token = localStorage.getItem('authToken');
+
     try {
-      const token = localStorage.getItem('token'); // Ensure this matches your stored token key
-      const config = {
+      await axios.delete(`http://localhost:5000/api/wishlist/${wishlistItemId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      };
-      await axios.delete(`http://localhost:5000/api/wishlist/delete/${productId}`, config);
-      // Update the state to remove the product after successful deletion
-      setWishlistItems((prevItems) => prevItems.filter(item => item._id !== productId));
-      alert('Product removed from wishlist');
+      });
+      toast.success('Item removed from wishlist.', { position: 'top-center', autoClose: 3000 });
+      // Refresh the wishlist after removing an item
+      fetchWishlist();
     } catch (error) {
-      alert('Error removing product from wishlist: ' + (error.response ? error.response.data : error.message));
+      const errorMessage =
+        error.response && error.response.data && error.response.data.message
+          ? error.response.data.message
+          : 'An error occurred. Please try again.';
+      toast.error(errorMessage, { position: 'top-center', autoClose: 3000 });
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <div className="text-center my-5">Loading...</div>;
+  if (error) return <div className="text-center text-danger my-5">{error}</div>;
 
   return (
-    <div className="wishlist-page">
-      <h1 className="page-title">Your Wishlist</h1>
-      {wishlistItems.length === 0 ? (
-        <p>Your wishlist is empty.</p>
-      ) : (
-        <div className="wishlist-grid">
-          {wishlistItems.map((product) => (
-            <div key={product._id} className="wishlist-card">
-              <img 
-                src={product.imageUrl || '/path/to/placeholder-image.jpg'} 
-                alt={product.name} 
-                className="wishlist-image" 
-              />
-              <div className="wishlist-info">
-                <h4>{product.name}</h4>
-                <p className="price">${product.price.toFixed(2)}</p> {/* Format price to two decimal places */}
-                <p className="description">{product.description}</p>
+    <>
+      <ToastContainer />
+      <div className="container mt-5 mb-5">
+        <h2>Your Wishlist</h2>
+        {wishlistItems.length === 0 ? (
+          <p className="text-center">Your wishlist is empty.</p>
+        ) : (
+          <div className="row">
+            {wishlistItems.map((item) => (
+              <div className="col-md-4" key={item._id}>
+                <div className="card mb-4 shadow-sm">
+                  <img
+                    src={item.product.imageUrl || 'https://via.placeholder.com/400x300.png?text=Product+Image'}
+                    className="card-img-top"
+                    alt={item.product.name}
+                  />
+                  <div className="card-body">
+                    <h5 className="card-title">{item.product.name}</h5>
+                    <p className="card-text">Price: ₹ {item.product.price}</p>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => removeFromWishlist(item._id)}
+                    >
+                      <FaTrash className="mr-2" /> Remove
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div className="wishlist-actions">
-                <button 
-                  className="remove-btn" 
-                  onClick={() => removeFromWishlist(product._id)}
-                >
-                  <FaTrashAlt /> Remove
-                </button>
-                <button className="cart-btn">
-                  <FaShoppingCart /> Add to Cart
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
-export default WishlistPage;
+export default Wishlist;

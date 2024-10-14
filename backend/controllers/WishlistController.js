@@ -1,5 +1,6 @@
 // controllers/WishlistController.js
 import Wishlist from '../models/wishlist.js';
+import jwt from 'jsonwebtoken';
 
 export const addToWishlist = async (req, res) => {
   const { productId } = req.body;
@@ -35,13 +36,22 @@ export const addToWishlist = async (req, res) => {
 
 // Fetch user's wishlist
 export const getWishlist = async (req, res) => {
-  const userId = req.user.id; // Get user ID from the token
+  const token = req.headers.authorization?.split(' ')[1]; // Safely access the token
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
 
   try {
-    const wishlistItems = await Wishlist.find({ userId });
-    res.status(200).json(wishlistItems);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id; // Use user ID from decoded token
+
+    const wishlistItems = await Wishlist.find({ user: userId }).populate('product');
+    
+    if (!wishlistItems.length) {
+      return res.status(404).json({ message: 'No items found in wishlist.' });
+    }
+    
+    return res.status(200).json(wishlistItems);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error.' });
+    console.error('Error fetching wishlist:', error); // Log the error
+    return res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
