@@ -12,6 +12,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [quantity, setQuantity] = useState(1); // New state for quantity
 
   useEffect(() => {
     fetchProduct();
@@ -31,36 +32,62 @@ const ProductDetails = () => {
   };
 
   const addToWishlist = async (productId) => {
-    if (!productId) {
-      console.error('Product ID is required.');
-      toast.error('Product ID is required.', { position: 'top-center', autoClose: 3000 });
+    const token = localStorage.getItem('authToken'); // Get the token from local storage
+    if (!productId || !token) {
+      toast.error('Product ID or auth token is missing.', { position: 'top-center', autoClose: 3000 });
       return;
     }
-
-    const token = localStorage.getItem('authToken'); // Get the token from local storage
 
     try {
       const response = await axios.post(
         'http://localhost:5000/api/wishlist',
-        { productId }, // Ensure productId is being sent
+        { productId },
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the headers
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       if (response.status === 201) {
         toast.success(response.data.message, { position: 'top-center', autoClose: 3000 });
       }
     } catch (error) {
+      toast.error('Item Already in the wishlist', { position: 'top-center', autoClose: 3000 });
+    }
+  };
+
+  const addToCart = async (productId) => {
+    const token = localStorage.getItem('authToken'); // Get the token from local storage
+    if (!productId || !token) {
+      toast.error('Product ID or auth token is missing.', { position: 'top-center', autoClose: 3000 });
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/api/cart',
+        { productId, quantity }, // Pass the quantity to the backend
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 201) {
+        toast.success('Added to cart successfully!', { position: 'top-center', autoClose: 3000 });
+      }
+    } catch (error) {
       if (error.response) {
-        const errorMessage =
-          error.response.status === 400
-            ? error.response.data.message
-            : 'An error occurred. Please try again.';
+        const errorMessage = error.response.data.message || 'Failed to add to cart';
         toast.error(errorMessage, { position: 'top-center', autoClose: 3000 });
       }
+    }
+  };
+
+  const handleIncreaseQuantity = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1); // Increase quantity by 1
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1); // Decrease quantity by 1, but not below 1
     }
   };
 
@@ -92,14 +119,23 @@ const ProductDetails = () => {
               <span className="text-warning h5">
                 {product.rating || 0} <FaStar />
               </span>
-              <span className="ml-2">
-                ({product.numReviews || 0} Ratings)
-              </span>
+              <span className="ml-2">({product.numReviews || 0} Ratings)</span>
+            </div>
+
+            {/* Quantity Controls */}
+            <div className="quantity-controls d-flex align-items-center mb-4">
+              <button className="btn btn-outline-secondary" onClick={handleDecreaseQuantity}>
+                -
+              </button>
+              <span className="mx-3 h5">{quantity}</span>
+              <button className="btn btn-outline-secondary" onClick={handleIncreaseQuantity}>
+                +
+              </button>
             </div>
 
             {/* Action Buttons */}
             <div className="mb-4">
-              <button className="btn btn-danger btn-lg mr-2">
+              <button className="btn btn-danger btn-lg mr-2" onClick={() => addToCart(product._id)}>
                 <FaCartPlus className="mr-2" /> Add to Cart
               </button>
               <button className="btn btn-primary btn-lg">Buy Now</button>

@@ -13,7 +13,7 @@ import SellerRoutes from './routes/SellerRoutes.js';
 import auth from  './routes/auth.js';
 import  verifyToken  from './middleware/authenticateToken.js';
 import userDetailsRouter from './routes/UserDetailsRoutes.js';
-
+import cartRoutes from './routes/cartRoutes.js';
 
 
 const app = express();
@@ -32,6 +32,7 @@ app.use('/api/wishlist', WishlistRoutes); //
 app.use('/api/seller/signup', SellerRoutes); //
 app.use('/api/auth', auth);
 app.use('/api/userDetails', userDetailsRouter);
+app.use('/api/cart', cartRoutes); //
 
 
 
