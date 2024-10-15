@@ -17,7 +17,7 @@ import ProductDetails from './components/ProductDetails';
 import UserSignup from './components/Authentication/SignUp/UserSignup';
 import SellerSignup from './components/Authentication/SignUp/SellerSignup';
 import Profile from './components/Profile/Profile';
-
+import Cart from './components/Cart';
 const App = () => (
   <Router>
     {/* Conditional Rendering of Header */}
@@ -36,6 +36,7 @@ const App = () => (
       <Route path="/signupuser" element={<UserSignup />} />
       <Route path="/profile" element={<Profile />} />
      <Route path="/signupseller" element={<SellerSignup />} /> {/* Including Header here */}
+     <Route path="/cart" element={<Cart />} />
     </Routes>
   </Router>
 );
