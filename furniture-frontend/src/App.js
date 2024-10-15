@@ -24,7 +24,7 @@ const App = () => (
     <Routes>
       <Route path="/" element={<><Header /><Home /></>} />
       <Route path="/products" element={<><Header /><CategoriesPage /></>} />
-      <Route path="/wishlist" element={<Wishlist />} />
+      <Route path="/wishlist" element={<><Header /><Wishlist /></>} />
       <Route path="/login" element={<Login />} />
       
 <Route path="/seller" element={<><Header/><Seller /></>} />
@@ -36,7 +36,7 @@ const App = () => (
       <Route path="/signupuser" element={<UserSignup />} />
       <Route path="/profile" element={<Profile />} />
      <Route path="/signupseller" element={<SellerSignup />} /> {/* Including Header here */}
-     <Route path="/cart" element={<Cart />} />
+     <Route path="/cart" element={<><Header /><Cart /></>} />
     </Routes>
   </Router>
 );
