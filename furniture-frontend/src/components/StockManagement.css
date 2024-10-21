@@ -1,60 +1,57 @@
-/* Main container styling */
 .stock-management-page {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  color: white; /* Set default text color to white */
+  height: 100vh;
 }
 
-/* Page header */
 .page-header {
+  background-color: #007BFF;
+  color: white;
+  padding: 20px;
   text-align: center;
-  margin-bottom: 20px;
-  color: white; /* Ensures header text is white */
 }
 
 .main-container {
   display: flex;
-  width: 100%;
-  max-width: 1200px;
+  flex: 1;
 }
 
 .sidebar {
   width: 200px;
-  margin-right: 20px;
+  background-color: #f8f9fa;
+  border-right: 1px solid #ddd;
 }
 
 .sidebar ul {
-  list-style: none;
+  list-style-type: none;
   padding: 0;
 }
 
-.sidebar li {
+.sidebar ul li {
+  padding: 15px;
   cursor: pointer;
-  padding: 10px;
-  background-color: #000000;
-  margin-bottom: 10px;
   text-align: center;
-  color: white; /* Sidebar text color */
+  transition: background-color 0.3s;
 }
 
-.sidebar li.active {
-  background-color: #007bff;
+.sidebar ul li:hover {
+  background-color: #007BFF;
+  color: white;
+}
+
+.sidebar ul li.active {
+  background-color: #007BFF;
   color: white;
 }
 
 .content {
   flex: 1;
-  color: white; /* Set content text color to white */
+  padding: 20px;
 }
 
 .stock-form {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  color: white; /* Set form text color to white */
+  display: flex;
+  flex-direction: column;
 }
 
 .form-group {
@@ -62,86 +59,91 @@
 }
 
 .form-group label {
-  display: block;
   margin-bottom: 5px;
-  color: white; /* Set label text color to white */
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-}
-
-button[type="submit"] {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  cursor: pointer;
-}
-
-button[type="submit"]:hover {
-  background-color: #0056b3;
-}
-
-.product-list {
-  width: 100%;
-  color: white; /* Set product list text color to white */
-}
-
-.product-list h2 {
-  color: white;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.product-list table {
-  width: 100%;
-  border-collapse: collapse;
-  color: white; /* Ensure table text is white */
-}
-
-.product-list th,
-.product-list td {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  color: white; /* Ensure table header and row text is white */
-  text-align: left;
-}
-
-.product-list th {
-  background-color: #000000;
   font-weight: bold;
-  text-align: center;
-  color: white; /* Ensure table header text is white */
 }
 
-.product-list td {
-  text-align: center;
+input, select, textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
 }
 
-.product-list img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-}
-
-button {
-  background-color: #dc3545;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #c82333;
+textarea {
+  resize: vertical;
 }
 
 .error {
   color: red;
-  font-size: 12px;
+  font-size: 0.9em;
+}
+
+.image-url-input {
+  display: flex;
+}
+
+.image-url-input input {
+  flex: 1;
+  margin-right: 5px;
+}
+
+.image-url-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.image-url-list li {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.image-url-list img {
+  max-width: 50px;
+  margin-right: 10px;
+}
+
+.product-list {
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #007BFF;
+  color: white;
+}
+
+td {
+  background-color: #f8f9fa;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.product-image {
+  width: 50px !important; /* Set a maximum width for images */
+  height: 50px !important; /* Set a maximum height for images */
+  margin-right: 3px; /* Space between images */
 }

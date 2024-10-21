@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema({
   subcategory: { type: String, required: true },  // Added subcategory field
   price: { type: Number, required: true },
   stockQuantity: { type: Number, required: true },
-  imageUrl: { type: String },
+  imageUrls: [{ type: String }], 
   status: {
     type: String,
     enum: ['active', 'inactive', 'out_of_stock', 'discontinued'],

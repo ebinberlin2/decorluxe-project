@@ -1,68 +1,130 @@
-/* ProductDetails.css */
-
+/* General body styles */
 body {
-  background-color: #030404; /* Light gray background for contrast */
+  background-color: #f5f7f7; /* Dark background for contrast */
+  font-family: 'Poppins', sans-serif;
 }
 
-.container {
-  max-width: 1200px; /* Limiting the width for better readability */
+/* Container for product details */
+#product-details-container {
+  max-width: 1200px;
+  margin: 0 auto; /* Center the container */
+  padding: 20px; /* Padding for spacing */
 }
 
-.product-title {
-  font-size: 2.5rem; /* Larger font size for the title */
-  font-weight: bold;
-  color: #343a40; /* Darker color for text */
-}
-
-.product-price {
-  font-size: 1.8rem; /* Larger font size for price */
-  font-weight: bold;
-  margin-top: 10px; /* Add some margin */
-}
-
-.product-description {
-  font-size: 1.1rem; /* Standard font size */
-  color: #495057; /* Gray color for description text */
-  line-height: 1.5; /* Improved line height */
-}
-
-.product-rating {
-  font-size: 1.5rem; /* Larger rating font size */
-}
-
-.btn {
-  border-radius: 25px; /* Rounded buttons for a modern look */
-  padding: 10px 20px; /* Padding for better click area */
-}
-
-.btn-danger {
-  background-color: #dc3545; /* Custom red color */
-}
-
-.btn-primary {
-  background-color: #007bff; /* Custom blue color */
-}
-
-.img-fluid {
-  width: 100%; /* Make image fill its container */
-  height: auto; /* Maintain aspect ratio */
-}
-
-.product-image {
-  max-height: 100%; /* Limit the max height to ensure it fits well */
-  object-fit: cover; /* Cover the image without distortion */
-}
-
-/* Glowing border effect */
-.shadow-lg {
-  box-shadow: 0 10px 20px rgb(254, 254, 254), 
+/* Product card styles */
+#product-card {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2),
               0 0 25px rgba(0, 191, 255, 0.6); /* Glowing effect */
+  background-color: #ffffff; /* White background for contrast */
+  padding: 30px;
+  border-radius: 15px; /* Rounded edges */
 }
 
-.bg-light {
-  background-color: #ffffff; /* White background for product area */
+/* Product Image column */
+#product-image-column {
+  padding: 0; /* Remove padding */
 }
 
-h5 {
-  font-weight: bold; /* Make headings bold */
+/* Product Image */
+#product-image {
+  max-width: 100% !important;
+  height: 500px !important; /* Fixed height for uniformity */
+  object-fit: cover !important; /* Ensures the image covers the space without distortion */
+  border-radius: 10px; /* Rounded corners for a modern look */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+#product-card:hover #product-image {
+  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.3),
+              0 0 30px rgba(0, 191, 255, 0.7);
+  transition: all 0.3s ease;
+}
+
+/* Product Title */
+#product-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #020202;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Product Price */
+#product-price {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ff5733; /* Accent color for the price */
+  margin-top: 10px;
+}
+
+/* Product Description */
+#product-description {
+  font-size: 1.1rem;
+  color: #adb5bd;
+  line-height: 1.6;
+  margin-top: 15px;
+}
+
+/* Product Rating */
+#product-rating {
+  font-size: 1.5rem;
+  color: #ffc107; /* Yellow color for star rating */
+  margin-bottom: 20px;
+}
+
+/* Quantity Controls */
+#quantity-controls {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Action Buttons */
+#action-buttons .btn {
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+}
+
+#add-to-cart-btn {
+  background-color: #e63946; /* Brighter red */
+  border: none;
+}
+
+#add-to-cart-btn:hover {
+  background-color: #c92d39; /* Darker red on hover */
+}
+
+#buy-now-btn {
+  background-color: #007bff;
+  border: none;
+}
+
+#buy-now-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Wishlist Button */
+#wishlist-button .btn {
+  border: 1px solid #adb5bd;
+  color: #adb5bd;
+}
+
+#wishlist-button .btn:hover {
+  color: #ffffff;
+  background-color: #adb5bd;
+}
+
+/* Full Product Description */
+#full-description-heading {
+  font-weight: bold;
+  color: #ffffff;
+  margin-top: 30px;
+}
+
+#full-description {
+  font-size: 1.1rem;
+  color: #adb5bd;
+  line-height: 1.6;
+  margin-top: 15px;
 }

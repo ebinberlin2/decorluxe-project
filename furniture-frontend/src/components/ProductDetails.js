@@ -97,25 +97,26 @@ const ProductDetails = () => {
   return (
     <>
       <ToastContainer />
-      <div className="container mt-5 mb-5">
-        <div className="row shadow-lg rounded overflow-hidden bg-light">
+      <div className="container mt-5 mb-5" id="product-details-container">
+        <div className="row shadow-lg rounded overflow-hidden bg-light" id="product-card">
           {/* Left Column: Product Image */}
-          <div className="col-md-6 p-0">
+          <div className="col-md-6 p-0" id="product-image-column">
             <img
-              src={product.imageUrl || 'https://via.placeholder.com/400x300.png?text=Product+Image'}
+              src={product.imageUrls || 'https://via.placeholder.com/400x300.png?text=Product+Image'}
               className="img-fluid product-image"
               alt={product.name}
+              id="product-image"
             />
           </div>
 
           {/* Right Column: Product Info */}
-          <div className="col-md-6 p-4">
-            <h1 className="product-title">{product.name}</h1>
-            <p className="product-price text-danger h4">₹ {product.price}</p>
-            <p className="product-description">{product.description}</p>
+          <div className="col-md-6 p-4" id="product-info-column">
+            <h1 className="product-title" id="product-title">{product.name}</h1>
+            <p className="product-price text-danger h4" id="product-price">₹ {product.price}</p>
+            <p className="product-description" id="product-description">{product.description}</p>
 
             {/* Rating */}
-            <div className="product-rating d-flex align-items-center mb-3">
+            <div className="product-rating d-flex align-items-center mb-3" id="product-rating">
               <span className="text-warning h5">
                 {product.rating || 0} <FaStar />
               </span>
@@ -123,7 +124,7 @@ const ProductDetails = () => {
             </div>
 
             {/* Quantity Controls */}
-            <div className="quantity-controls d-flex align-items-center mb-4">
+            <div className="quantity-controls d-flex align-items-center mb-4" id="quantity-controls">
               <button className="btn btn-outline-secondary" onClick={handleDecreaseQuantity}>
                 -
               </button>
@@ -134,23 +135,23 @@ const ProductDetails = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="mb-4">
-              <button className="btn btn-danger btn-lg mr-2" onClick={() => addToCart(product._id)}>
+            <div className="mb-4" id="action-buttons">
+              <button className="btn btn-danger btn-lg mr-2" onClick={() => addToCart(product._id)} id="add-to-cart-btn">
                 <FaCartPlus className="mr-2" /> Add to Cart
               </button>
-              <button className="btn btn-primary btn-lg">Buy Now</button>
+              <button className="btn btn-primary btn-lg" id="buy-now-btn">Buy Now</button>
             </div>
 
             {/* Wishlist */}
-            <div className="mb-4">
+            <div className="mb-4" id="wishlist-button">
               <button className="btn btn-outline-secondary" onClick={() => addToWishlist(product._id)}>
                 <FaHeart className="mr-2" /> Add to Wishlist
               </button>
             </div>
 
             {/* Description */}
-            <h5 className="mt-4">Product Description</h5>
-            <p>{product.fullDescription || 'No additional description available.'}</p>
+            <h5 className="mt-4" id="full-description-heading">Product Description</h5>
+            <p id="full-description">{product.fullDescription || 'No additional description available.'}</p>
           </div>
         </div>
       </div>

@@ -10,7 +10,8 @@ const StockManagement = () => {
     subcategory: '',
     price: 0,
     stockQuantity: 0,
-    imageUrl: '',
+    imageUrls: [],
+    newImageUrl: '',
   });
   const [products, setProducts] = useState([]);
   const [errors, setErrors] = useState({});
@@ -33,9 +34,7 @@ const StockManagement = () => {
       case 'price':
         return value > 0 ? '' : 'Price must be a positive number';
       case 'stockQuantity':
-        return value > 0 ? '' : 'Stock quantity cannot be negative and zero';
-      case 'imageUrl':
-        return value && !/^https?:\/\/.+/i.test(value) ? 'Invalid URL format' : '';
+        return value >= 0 ? '' : 'Stock quantity cannot be negative';
       default:
         return '';
     }
@@ -48,11 +47,37 @@ const StockManagement = () => {
       [name]: value,
     });
 
-    // Validate field on input change
     const errorMessage = validateField(name, value);
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: errorMessage,
+    }));
+  };
+
+  const handleNewImageUrlChange = (e) => {
+    setProductData({
+      ...productData,
+      newImageUrl: e.target.value,
+    });
+  };
+
+  const handleAddImageUrl = () => {
+    const { newImageUrl } = productData;
+    if (newImageUrl && /^https?:\/\/.+/i.test(newImageUrl)) {
+      setProductData((prevData) => ({
+        ...prevData,
+        imageUrls: [...prevData.imageUrls, newImageUrl],
+        newImageUrl: '',
+      }));
+    } else {
+      alert('Please enter a valid image URL');
+    }
+  };
+
+  const handleRemoveImageUrl = (url) => {
+    setProductData((prevData) => ({
+      ...prevData,
+      imageUrls: prevData.imageUrls.filter((imgUrl) => imgUrl !== url),
     }));
   };
 
@@ -89,7 +114,8 @@ const StockManagement = () => {
           subcategory: '',
           price: 0,
           stockQuantity: 0,
-          imageUrl: '',
+          imageUrls: [],
+          newImageUrl: '',
         });
         fetchProducts();
       } else {
@@ -171,18 +197,16 @@ const StockManagement = () => {
                 />
                 {errors.name && <p className="error">{errors.name}</p>}
               </div>
-
               <div className="form-group">
                 <label htmlFor="description">Description:</label>
                 <textarea
                   id="description"
                   name="description"
-                  placeholder="Description"
+                  placeholder="Product Description"
                   value={productData.description}
                   onChange={handleInputChange}
-                ></textarea>
+                />
               </div>
-
               <div className="form-group">
                 <label htmlFor="category">Category:</label>
                 <select
@@ -193,15 +217,14 @@ const StockManagement = () => {
                   required
                 >
                   <option value="">Select Category</option>
-                  <option value="dining">Dining Room</option>
-                  <option value="living_room">Living Room</option>
+                  <option value="living-room">Living Room</option>
                   <option value="bedroom">Bedroom</option>
-                  <option value="outdoor">Outdoor</option>
+                  <option value="kitchen">Kitchen</option>
                   <option value="office">Office</option>
+                  <option value="outdoor">Outdoor</option>
                 </select>
                 {errors.category && <p className="error">{errors.category}</p>}
               </div>
-
               <div className="form-group">
                 <label htmlFor="subcategory">Subcategory:</label>
                 <select
@@ -212,40 +235,44 @@ const StockManagement = () => {
                   required
                 >
                   <option value="">Select Subcategory</option>
-                  {productData.category === 'dining' && (
-                    <>
-                      <option value="dining_table">Dining Table</option>
-                      <option value="chair">Chair</option>
-                    </>
-                  )}
-                  {productData.category === 'living_room' && (
+                  {productData.category === 'living-room' && (
                     <>
                       <option value="sofa">Sofa</option>
-                      <option value="coffee_table">Coffee Table</option>
+                      <option value="coffee-table">Coffee Table</option>
+                      <option value="tv-stand">TV Stand</option>
                     </>
                   )}
                   {productData.category === 'bedroom' && (
                     <>
                       <option value="bed">Bed</option>
                       <option value="wardrobe">Wardrobe</option>
+                      <option value="nightstand">Nightstand</option>
                     </>
                   )}
-                  {productData.category === 'outdoor' && (
+                  {productData.category === 'kitchen' && (
                     <>
-                      <option value="patio_chairs">Patio Chairs</option>
-                      <option value="garden_table">Garden Table</option>
+                      <option value="dining-table">Dining Table</option>
+                      <option value="chairs">Chairs</option>
+                      <option value="kitchen-island">Kitchen Island</option>
                     </>
                   )}
                   {productData.category === 'office' && (
                     <>
                       <option value="desk">Desk</option>
-                      <option value="office_chair">Office Chair</option>
+                      <option value="office-chair">Office Chair</option>
+                      <option value="bookshelf">Bookshelf</option>
+                    </>
+                  )}
+                  {productData.category === 'outdoor' && (
+                    <>
+                      <option value="outdoor-sofa">Outdoor Sofa</option>
+                      <option value="patio-set">Patio Set</option>
+                      <option value="garden-bench">Garden Bench</option>
                     </>
                   )}
                 </select>
                 {errors.subcategory && <p className="error">{errors.subcategory}</p>}
               </div>
-
               <div className="form-group">
                 <label htmlFor="price">Price:</label>
                 <input
@@ -256,12 +283,9 @@ const StockManagement = () => {
                   value={productData.price}
                   onChange={handleInputChange}
                   required
-                  min="0.01"
-                  step="0.01"
                 />
                 {errors.price && <p className="error">{errors.price}</p>}
               </div>
-
               <div className="form-group">
                 <label htmlFor="stockQuantity">Stock Quantity:</label>
                 <input
@@ -272,61 +296,80 @@ const StockManagement = () => {
                   value={productData.stockQuantity}
                   onChange={handleInputChange}
                   required
-                  min="0"
                 />
                 {errors.stockQuantity && <p className="error">{errors.stockQuantity}</p>}
               </div>
-
               <div className="form-group">
-                <label htmlFor="imageUrl">Image URL:</label>
-                <input
-                  type="text"
-                  id="imageUrl"
-                  name="imageUrl"
-                  placeholder="Image URL"
-                  value={productData.imageUrl}
-                  onChange={handleInputChange}
-                />
-                {errors.imageUrl && <p className="error">{errors.imageUrl}</p>}
+                <label htmlFor="imageUrls">Image URLs:</label>
+                <div className="image-url-input">
+                  <input
+                    type="text"
+                    value={productData.newImageUrl}
+                    onChange={handleNewImageUrlChange}
+                    placeholder="Add image URL"
+                  />
+                  <button type="button" onClick={handleAddImageUrl}>
+                    Add Image
+                  </button>
+                </div>
+                <ul className="image-url-list">
+                  {productData.imageUrls.map((url, index) => (
+                    <li key={index}>
+                      <img src={url} alt={`Product Preview ${index + 1}`} className="preview-image" />
+                      <button type="button" onClick={() => handleRemoveImageUrl(url)}>Remove</button>
+                    </li>
+                  ))}
+                </ul>
               </div>
-
               <button type="submit">Add Product</button>
             </form>
           )}
 
           {activeView === 'view' && (
             <div className="product-list">
-              <h2>Products</h2>
+              <h2>Products List</h2>
               <table>
                 <thead>
                   <tr>
-                    <th>Image</th>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Category</th>
                     <th>Subcategory</th>
                     <th>Price</th>
                     <th>Stock Quantity</th>
+                    <th>Images</th> {/* New column for images */}
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((product) => (
-                    <tr key={product._id}>
-                      <td>
-                        <img src={product.imageUrl} alt={product.name} className="product-image" />
-                      </td>
-                      <td>{product.name}</td>
-                      <td>{product.description}</td>
-                      <td>{product.category}</td>
-                      <td>{product.subcategory}</td>
-                      <td>Rs. {product.price.toFixed(2)}</td>
-                      <td>{product.stockQuantity}</td>
-                      <td>
-                        <button onClick={() => handleDelete(product._id)}>Delete</button>
-                      </td>
+                  {products.length > 0 ? (
+                    products.map((product) => (
+                      <tr key={product._id}>
+                        <td>{product.name}</td>
+                        <td>{product.description}</td>
+                        <td>{product.category}</td>
+                        <td>{product.subcategory}</td>
+                        <td>${product.price}</td>
+                        <td>{product.stockQuantity}</td>
+                        <td>
+                          {product.imageUrls.length > 0 ? (
+                            product.imageUrls.map((url, index) => (
+                              <img key={index} src={url} alt={`Product Image ${index + 1}`} className="product-image" />
+                            ))
+                          ) : (
+                            <p>No Images</p>
+                          )}
+                        </td>
+                        <td>
+                          <button className="delete-button" onClick={() => handleDelete(product._id)}>Delete</button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="8">No products available</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>

@@ -135,7 +135,7 @@ body {
 }
 
 .product-image {
-  width: 100%;  /* Make image responsive within the card */
-  height: 300px;  /* Fixed height for the image */
+  width: 100% !important;  /* Make image responsive within the card */
+  height: 250px !important;  /* Fixed height for the image */
   object-fit: cover;  /* Ensures the image covers the space without distortion */
 }

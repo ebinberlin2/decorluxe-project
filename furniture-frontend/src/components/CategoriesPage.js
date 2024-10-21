@@ -86,7 +86,7 @@ const ProductPage = () => {
             <Link to={`/products/${product._id}`} className="product-link">
 
               <img
-                src={product.imageUrl || 'https://via.placeholder.com/150'}
+                src={product.imageUrls || 'https://via.placeholder.com/150'}
                 alt={product.name}
                 className="product-image"
               />
