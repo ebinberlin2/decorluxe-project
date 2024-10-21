@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './StockManagement.css';
 
 const StockManagement = () => {
@@ -12,15 +12,94 @@ const StockManagement = () => {
     stockQuantity: 0,
     imageUrls: [],
     newImageUrl: '',
+    status: 'active', // Default status
   });
   const [products, setProducts] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [editProductId, setEditProductId] = useState(null);
   const [errors, setErrors] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [subcategories, setSubcategories] = useState([]);
+
+  const categories = {
+    'Living Room Furniture': [
+      'Sofas',
+      'Armchairs',
+      'Coffee Tables',
+      'TV Stands',
+      'Bookcases',
+      'Entertainment Centers',
+      'Ottomans',
+      'Recliners',
+    ],
+    'Bedroom Furniture': [
+      'Beds',
+      'Nightstands',
+      'Dressers',
+      'Wardrobes',
+      'Bedside Tables',
+      'Mattresses',
+      'Bedding',
+    ],
+    'Dining Room Furniture': [
+      'Dining Tables',
+      'Dining Chairs',
+      'Buffets',
+      'Sideboards',
+      'Bar Stools',
+      'Kitchen Islands',
+      'Dining Sets',
+    ],
+    'Office Furniture': [
+      'Desks',
+      'Office Chairs',
+      'Bookcases',
+      'Filing Cabinets',
+      'Conference Tables',
+      'Cubicles',
+      'Standing Desks',
+    ],
+    'Outdoor Furniture': [
+      'Patio Sets',
+      'Garden Chairs',
+      'Outdoor Tables',
+      'Hammocks',
+      'Sun Loungers',
+    ],
+  };
+
+  useEffect(() => {
+    if (activeView === 'view') {
+      fetchProducts();
+    }
+  }, [activeView]);
 
   const handleViewChange = (view) => {
     setActiveView(view);
     if (view === 'view') {
       fetchProducts();
+    } else {
+      resetForm();
+      setEditMode(false);
     }
+  };
+
+  const resetForm = () => {
+    setProductData({
+      name: '',
+      description: '',
+      category: '',
+      subcategory: '',
+      price: 0,
+      stockQuantity: 0,
+      imageUrls: [],
+      newImageUrl: '',
+      status: 'active',
+    });
+    setErrors({});
+    setEditProductId(null);
+    setSelectedCategory('');
+    setSubcategories([]);
   };
 
   const validateField = (name, value) => {
@@ -35,6 +114,8 @@ const StockManagement = () => {
         return value > 0 ? '' : 'Price must be a positive number';
       case 'stockQuantity':
         return value >= 0 ? '' : 'Stock quantity cannot be negative';
+      case 'status':
+        return value ? '' : 'Status is required';
       default:
         return '';
     }
@@ -52,6 +133,13 @@ const StockManagement = () => {
       ...prevErrors,
       [name]: errorMessage,
     }));
+  };
+
+  const handleCategoryChange = (e) => {
+    const category = e.target.value;
+    setSelectedCategory(category);
+    setSubcategories(categories[category] || []);
+    setProductData({ ...productData, category, subcategory: '' });
   };
 
   const handleNewImageUrlChange = (e) => {
@@ -96,9 +184,15 @@ const StockManagement = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
+    const url = editMode
+      ? `http://localhost:5000/api/products/edit/${editProductId}`
+      : 'http://localhost:5000/api/products/add';
+
+    const method = editMode ? 'PUT' : 'POST';
+
     try {
-      const response = await fetch('http://localhost:5000/api/products/add', {
-        method: 'POST',
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -106,21 +200,13 @@ const StockManagement = () => {
       });
 
       if (response.ok) {
-        alert('Product added successfully');
-        setProductData({
-          name: '',
-          description: '',
-          category: '',
-          subcategory: '',
-          price: 0,
-          stockQuantity: 0,
-          imageUrls: [],
-          newImageUrl: '',
-        });
+        alert(editMode ? 'Product updated successfully' : 'Product added successfully');
+        resetForm();
         fetchProducts();
+        setActiveView('view');
       } else {
         const errorData = await response.json();
-        alert(`Failed to add product: ${errorData.error}`);
+        alert(`Failed to ${editMode ? 'update' : 'add'} product: ${errorData.error}`);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -163,218 +249,204 @@ const StockManagement = () => {
     }
   };
 
+  const handleEdit = (product) => {
+    setProductData(product);
+    setEditMode(true);
+    setEditProductId(product._id);
+    setSelectedCategory(product.category);
+    setSubcategories(categories[product.category] || []);
+    setActiveView('add');
+  };
+
   return (
-    <div className="stock-management-page">
-      <header className="page-header">
-        <h1>Stock Management</h1>
-      </header>
+    <div id="sm-stock-management" className="stock-management">
+      <div id="sm-sidebar" className="sidebar">
+        <h2>Dashboard</h2>
+        <ul>
+          <li onClick={() => handleViewChange('add')}>Add Product</li>
+          <li onClick={() => handleViewChange('view')}>View Products</li>
+        </ul>
+      </div>
 
-      <div className="main-container">
-        <div className="sidebar">
-          <ul>
-            <li onClick={() => handleViewChange('add')} className={activeView === 'add' ? 'active' : ''}>
-              Add New Product
-            </li>
-            <li onClick={() => handleViewChange('view')} className={activeView === 'view' ? 'active' : ''}>
-              View & Manage Products
-            </li>
-          </ul>
-        </div>
+      <div id="sm-main-content" className="main-content">
+        {activeView === 'add' && (
+          <form onSubmit={handleSubmit} id="sm-form-container" className="form-container">
+            <h2>{editMode ? 'Edit Product' : 'Add Product'}</h2>
 
-        <div className="content">
-          {activeView === 'add' && (
-            <form className="stock-form" onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="name">Product Name:</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  placeholder="Product Name"
-                  value={productData.name}
-                  onChange={handleInputChange}
-                  required
-                />
-                {errors.name && <p className="error">{errors.name}</p>}
-              </div>
-              <div className="form-group">
-                <label htmlFor="description">Description:</label>
-                <textarea
-                  id="description"
-                  name="description"
-                  placeholder="Product Description"
-                  value={productData.description}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="category">Category:</label>
-                <select
-                  id="category"
-                  name="category"
-                  value={productData.category}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="">Select Category</option>
-                  <option value="living-room">Living Room</option>
-                  <option value="bedroom">Bedroom</option>
-                  <option value="kitchen">Kitchen</option>
-                  <option value="office">Office</option>
-                  <option value="outdoor">Outdoor</option>
-                </select>
-                {errors.category && <p className="error">{errors.category}</p>}
-              </div>
-              <div className="form-group">
-                <label htmlFor="subcategory">Subcategory:</label>
-                <select
-                  id="subcategory"
-                  name="subcategory"
-                  value={productData.subcategory}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="">Select Subcategory</option>
-                  {productData.category === 'living-room' && (
-                    <>
-                      <option value="sofa">Sofa</option>
-                      <option value="coffee-table">Coffee Table</option>
-                      <option value="tv-stand">TV Stand</option>
-                    </>
-                  )}
-                  {productData.category === 'bedroom' && (
-                    <>
-                      <option value="bed">Bed</option>
-                      <option value="wardrobe">Wardrobe</option>
-                      <option value="nightstand">Nightstand</option>
-                    </>
-                  )}
-                  {productData.category === 'kitchen' && (
-                    <>
-                      <option value="dining-table">Dining Table</option>
-                      <option value="chairs">Chairs</option>
-                      <option value="kitchen-island">Kitchen Island</option>
-                    </>
-                  )}
-                  {productData.category === 'office' && (
-                    <>
-                      <option value="desk">Desk</option>
-                      <option value="office-chair">Office Chair</option>
-                      <option value="bookshelf">Bookshelf</option>
-                    </>
-                  )}
-                  {productData.category === 'outdoor' && (
-                    <>
-                      <option value="outdoor-sofa">Outdoor Sofa</option>
-                      <option value="patio-set">Patio Set</option>
-                      <option value="garden-bench">Garden Bench</option>
-                    </>
-                  )}
-                </select>
-                {errors.subcategory && <p className="error">{errors.subcategory}</p>}
-              </div>
-              <div className="form-group">
-                <label htmlFor="price">Price:</label>
-                <input
-                  type="number"
-                  id="price"
-                  name="price"
-                  placeholder="Price"
-                  value={productData.price}
-                  onChange={handleInputChange}
-                  required
-                />
-                {errors.price && <p className="error">{errors.price}</p>}
-              </div>
-              <div className="form-group">
-                <label htmlFor="stockQuantity">Stock Quantity:</label>
-                <input
-                  type="number"
-                  id="stockQuantity"
-                  name="stockQuantity"
-                  placeholder="Stock Quantity"
-                  value={productData.stockQuantity}
-                  onChange={handleInputChange}
-                  required
-                />
-                {errors.stockQuantity && <p className="error">{errors.stockQuantity}</p>}
-              </div>
-              <div className="form-group">
-                <label htmlFor="imageUrls">Image URLs:</label>
-                <div className="image-url-input">
-                  <input
-                    type="text"
-                    value={productData.newImageUrl}
-                    onChange={handleNewImageUrlChange}
-                    placeholder="Add image URL"
-                  />
-                  <button type="button" onClick={handleAddImageUrl}>
-                    Add Image
-                  </button>
-                </div>
-                <ul className="image-url-list">
-                  {productData.imageUrls.map((url, index) => (
-                    <li key={index}>
-                      <img src={url} alt={`Product Preview ${index + 1}`} className="preview-image" />
-                      <button type="button" onClick={() => handleRemoveImageUrl(url)}>Remove</button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <button type="submit">Add Product</button>
-            </form>
-          )}
-
-          {activeView === 'view' && (
-            <div className="product-list">
-              <h2>Products List</h2>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Category</th>
-                    <th>Subcategory</th>
-                    <th>Price</th>
-                    <th>Stock Quantity</th>
-                    <th>Images</th> {/* New column for images */}
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.length > 0 ? (
-                    products.map((product) => (
-                      <tr key={product._id}>
-                        <td>{product.name}</td>
-                        <td>{product.description}</td>
-                        <td>{product.category}</td>
-                        <td>{product.subcategory}</td>
-                        <td>${product.price}</td>
-                        <td>{product.stockQuantity}</td>
-                        <td>
-                          {product.imageUrls.length > 0 ? (
-                            product.imageUrls.map((url, index) => (
-                              <img key={index} src={url} alt={`Product Image ${index + 1}`} className="product-image" />
-                            ))
-                          ) : (
-                            <p>No Images</p>
-                          )}
-                        </td>
-                        <td>
-                          <button className="delete-button" onClick={() => handleDelete(product._id)}>Delete</button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="8">No products available</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+            {/* Product Name */}
+            <div id="sm-form-group" className="form-group">
+              <label id="sm-label" htmlFor="name">Product Name:</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={productData.name}
+                onChange={handleInputChange}
+                required
+              />
+              {errors.name && <span id="sm-error" className="error">{errors.name}</span>}
             </div>
-          )}
-        </div>
+
+            {/* Description */}
+            <div id="sm-form-group" className="form-group">
+              <label id="sm-label" htmlFor="description">Description:</label>
+              <textarea
+                id="description"
+                name="description"
+                value={productData.description}
+                onChange={handleInputChange}
+                required
+              />
+              {errors.description && <span id="sm-error" className="error">{errors.description}</span>}
+            </div>
+
+            {/* Category */}
+            <div id="sm-form-group" className="form-group">
+              <label id="sm-label" htmlFor="category">Category:</label>
+              <select
+                id="category"
+                name="category"
+                value={productData.category}
+                onChange={handleCategoryChange}
+                required
+              >
+                <option value="">Select a category</option>
+                {Object.keys(categories).map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+              {errors.category && <span id="sm-error" className="error">{errors.category}</span>}
+            </div>
+
+            {/* Subcategory */}
+            <div id="sm-form-group" className="form-group">
+              <label id="sm-label" htmlFor="subcategory">Subcategory:</label>
+              <select
+                id="subcategory"
+                name="subcategory"
+                value={productData.subcategory}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select a subcategory</option>
+                {subcategories.map((sub) => (
+                  <option key={sub} value={sub}>{sub}</option>
+                ))}
+              </select>
+              {errors.subcategory && <span id="sm-error" className="error">{errors.subcategory}</span>}
+            </div>
+
+            {/* Price */}
+            <div id="sm-form-group" className="form-group">
+              <label id="sm-label" htmlFor="price">Price:</label>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                value={productData.price}
+                onChange={handleInputChange}
+                required
+              />
+              {errors.price && <span id="sm-error" className="error">{errors.price}</span>}
+            </div>
+
+            {/* Stock Quantity */}
+            <div id="sm-form-group" className="form-group">
+              <label id="sm-label" htmlFor="stockQuantity">Stock Quantity:</label>
+              <input
+                type="number"
+                id="stockQuantity"
+                name="stockQuantity"
+                value={productData.stockQuantity}
+                onChange={handleInputChange}
+                required
+              />
+              {errors.stockQuantity && <span id="sm-error" className="error">{errors.stockQuantity}</span>}
+            </div>
+
+            {/* Status */}
+            <div id="sm-form-group" className="form-group">
+              <label id="sm-label" htmlFor="status">Status:</label>
+              <select
+                id="status"
+                name="status"
+                value={productData.status}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+              {errors.status && <span id="sm-error" className="error">{errors.status}</span>}
+            </div>
+
+            {/* Image URLs */}
+            <div id="sm-form-group" className="form-group">
+              <label id="sm-label" htmlFor="newImageUrl">Image URL:</label>
+              <input
+                type="text"
+                id="newImageUrl"
+                name="newImageUrl"
+                value={productData.newImageUrl}
+                onChange={handleNewImageUrlChange}
+              />
+              <button type="button" onClick={handleAddImageUrl}>Add Image</button>
+            </div>
+            <div id="sm-image-preview" className="image-preview">
+              {productData.imageUrls.map((url) => (
+                <div key={url} className="image-container">
+                  <img src={url} alt="Product" onError={(e) => e.target.src = 'fallback-image-url.jpg'} />
+                  <button type="button" onClick={() => handleRemoveImageUrl(url)}>Remove</button>
+                </div>
+              ))}
+            </div>
+
+            <button type="submit">{editMode ? 'Update Product' : 'Add Product'}</button>
+          </form>
+        )}
+
+        {activeView === 'view' && (
+          <div id="sm-product-list" className="product-list">
+            <h2>Products</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th>Subcategory</th>
+                  <th>Price</th>
+                  <th>Stock Quantity</th>
+                  <th>Status</th>
+                  <th>Images</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product._id}>
+                    <td>{product.name}</td>
+                    <td>{product.description}</td>
+                    <td>{product.category}</td>
+                    <td>{product.subcategory}</td>
+                    <td>{product.price}</td>
+                    <td>{product.stockQuantity}</td>
+                    <td>{product.status}</td>
+                    <td>
+                      {product.imageUrls.map((url) => (
+                        <img key={url} src={url} alt="Product" className="product-image" onError={(e) => e.target.src = 'fallback-image-url.jpg'} />
+                      ))}
+                    </td>
+                    <td>
+                      <button onClick={() => handleEdit(product)}>Edit</button>
+                      <button onClick={() => handleDelete(product._id)}>Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

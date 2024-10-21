@@ -1,149 +1,266 @@
-.stock-management-page {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+/* Base Styles */
+#sm-body {
+  margin: 0;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: #000000; /* Dark background */
+  color: #ffffff !important; /* White text for readability */
+  display: flex; /* Ensure body is a flex container */
 }
 
-.page-header {
-  background-color: #007BFF;
-  color: white;
+/* Stock Management Layout */
+#sm-stock-management {
+  display: flex;
+  height: 100vh; /* Full viewport height */
+  width: 100%; /* Ensure full width */
+}
+
+/* Sidebar Styles */
+#sm-sidebar {
+  background-color: #1c1c1e; /* Dark gray for elegance */
+  color: #e6e6e6; /* Soft light gray text */
+  width: 250px; /* Fixed width for sidebar */
   padding: 20px;
-  text-align: center;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5); /* Deeper shadow for depth */
+  overflow-y: auto; /* Allow scrolling if content overflows */
 }
 
-.main-container {
-  display: flex;
-  flex: 1;
-}
-
-.sidebar {
-  width: 200px;
-  background-color: #f8f9fa;
-  border-right: 1px solid #ddd;
-}
-
-.sidebar ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.sidebar ul li {
-  padding: 15px;
-  cursor: pointer;
-  text-align: center;
-  transition: background-color 0.3s;
-}
-
-.sidebar ul li:hover {
-  background-color: #007BFF;
-  color: white;
-}
-
-.sidebar ul li.active {
-  background-color: #007BFF;
-  color: white;
-}
-
-.content {
-  flex: 1;
-  padding: 20px;
-}
-
-.stock-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  margin-bottom: 5px;
+/* Sidebar Header */
+#sm-sidebar h2 {
+  margin: 0 0 20px 0;
   font-weight: bold;
+  font-size: 1.8rem; /* Larger font for titles */
+  color: #ffd700; /* Gold-like color for luxury feel */
+  text-align: center; /* Centered title */
 }
 
-input, select, textarea {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-}
-
-textarea {
-  resize: vertical;
-}
-
-.error {
-  color: red;
-  font-size: 0.9em;
-}
-
-.image-url-input {
-  display: flex;
-}
-
-.image-url-input input {
-  flex: 1;
-  margin-right: 5px;
-}
-
-.image-url-list {
-  list-style-type: none;
+#sm-sidebar ul {
+  list-style: none;
   padding: 0;
 }
 
-.image-url-list li {
-  display: flex;
-  align-items: center;
-  margin: 5px 0;
+#sm-sidebar ul li {
+  cursor: pointer;
+  padding: 15px 20px;
+  border-radius: 5px;
+  margin: 5px 0; /* Space between items */
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 1.1rem; /* Slightly larger font for better readability */
+  color: #e6e6e6; /* Light gray for text */
 }
 
-.image-url-list img {
-  max-width: 50px;
-  margin-right: 10px;
+#sm-sidebar ul li:hover {
+  background-color: #404040; /* Slightly lighter gray on hover */
+  color: #ffd700; /* Highlight color */
 }
 
-.product-list {
+/* Active state */
+#sm-sidebar ul li.active {
+  background-color: #ffd700; /* Highlight active item */
+  color: #1c1c1e; /* Dark text for active state */
+}
+
+/* Main Content Styles */
+#sm-main-content {
+  flex: 1; /* Allow main content to take up remaining space */
+  padding: 20px;
+  background-color: #2d2d2d; /* Dark background for contrast */
+  overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+/* Form and Product List Styles */
+#sm-form-container,
+#sm-product-list {
   margin-top: 20px;
+  background-color: #1e1e1e; /* Darker background for forms and tables */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Subtle shadow */
 }
 
-table {
+/* Heading Styles */
+#sm-h2 {
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 1.5rem; /* Consistent heading size */
+  color: #ffd700; /* Gold-like color for headings */
+}
+
+/* Form Group Styles */
+#sm-form-group {
+  margin-bottom: 25px; /* Increased space for a more airy feel */
+  display: flex;
+  flex-direction: column;
+}
+
+#sm-label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1rem;
+  color: #e6e6e6; /* Softer color for labels */
+}
+
+/* Input Styles */
+#sm-input-text,
+#sm-input-number,
+#sm-select,
+#sm-textarea {
   width: 100%;
-  border-collapse: collapse;
+  padding: 12px;
+  border: 1px solid #555; /* Darker border */
+  border-radius: 5px;
+  background-color: #333; /* Dark input background */
+  color: #ffffff; /* White text for inputs */
+  font-size: 1rem;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+#sm-input-text:focus,
+#sm-input-number:focus,
+#sm-select:focus,
+#sm-textarea:focus {
+  outline: none;
+  border-color: #ffd700; /* Gold color on focus */
+  background-color: #444; /* Slightly brighter on focus */
+}
+
+/* Error Styles */
+#sm-error {
+  color: #ff4c4c; /* Error text color */
+  font-size: 0.8rem;
+}
+
+/* Button Styles */
+#sm-button {
+  background-color: #ffd700; /* Gold button color */
+  color: #1c1c1e; /* Dark text for contrast */
+  border: none;
+  padding: 12px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.3s;
+  font-size: 1rem; /* Consistent font size */
+}
+
+#sm-button:hover {
+  background-color: #e6b800; /* Darker gold on hover */
+  transform: translateY(-1px); /* Slight lift effect */
+}
+
+/* Table Styles */
+#sm-table {
+  width: 100%;
+  border-collapse: collapse; /* Collapses borders for a cleaner look */
+  margin-top: 20px;
+  background-color: #1e1e1e; /* Dark background for table */
+}
+
+/* Table Header Styles */
+#sm-th {
+  padding: 12px;
+  border: 1px solid #444; /* Dark border for header */
+  text-align: left;
+  color: #ffd700; /* Gold text for header */
+  background-color: #333; /* Darker background for header */
+  font-weight: bold; /* Bold text for header */
+}
+
+/* Table Body Styles */
+#sm-td {
+  padding: 12px;
+  border: 1px solid #444; /* Dark border for table cells */
+  text-align: left;
+  color: #ffffff; /* White text for table cells */
+  background-color: #2d2d2d; /* Slightly lighter than header */
+}
+
+/* Hover Effect for Table Rows */
+#sm-table tbody tr:hover {
+  background-color: #404040; /* Change background color on hover */
+}
+
+/* Alternate Row Colors */
+#sm-table tbody tr:nth-child(even) {
+  background-color: #2b2b2b; /* Slightly different color for even rows */
+}
+
+/* Button Styles within Table */
+#sm-table button {
+  background-color: #ffd700; /* Gold button color */
+  color: #1c1c1e; /* Dark text for contrast */
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.3s;
+  font-size: 0.9rem; /* Smaller font size for buttons */
+}
+
+#sm-table button:hover {
+  background-color: #e6b800; /* Darker gold on hover */
+  transform: translateY(-1px); /* Lift effect */
+}
+
+/* Image Preview Styles */
+#sm-image-preview {
+  display: flex;
+  flex-wrap: wrap; /* Allows images to wrap */
   margin-top: 10px;
 }
 
-th, td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-th {
-  background-color: #007BFF;
-  color: white;
-}
-
-td {
-  background-color: #f8f9fa;
-}
-
-.delete-button {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 5px 10px;
+#sm-image-preview img {
+  width: 60px; /* Adjust based on your requirements */
+  height: auto;
+  margin-right: 5px;
   border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+#sm-image-item {
+  display: inline-block;
+  position: relative;
+  margin-right: 10px;
+}
+
+#sm-image-item button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(255, 215, 0, 0.8); /* Semi-transparent delete button */
+  color: #1c1c1e; /* Dark text for button */
+  border: none;
+  border-radius: 50%;
   cursor: pointer;
+  padding: 5px;
+  font-size: 0.7rem;
+  transition: background 0.3s;
 }
 
-.delete-button:hover {
-  background-color: #c82333;
+#sm-image-item button:hover {
+  background: rgba(255, 215, 0, 1); /* Full color on hover */
 }
 
-.product-image {
-  width: 50px !important; /* Set a maximum width for images */
-  height: 50px !important; /* Set a maximum height for images */
-  margin-right: 3px; /* Space between images */
+/* Responsive Styles for Tables */
+@media (max-width: 768px) {
+  #sm-table {
+    font-size: 0.85rem; /* Adjust font size for smaller screens */
+  }
+  
+  #sm-th, #sm-td {
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+  
+  #sm-sidebar {
+    width: 200px; /* Adjust sidebar width for smaller screens */
+    padding: 15px; /* Adjust padding */
+  }
+
+  #sm-main-content {
+    padding: 15px; /* Adjust main content padding */
+  }
+
+  #sm-button {
+    padding: 10px 15px; /* Adjust button size */
+  }
 }

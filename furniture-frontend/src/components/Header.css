@@ -164,7 +164,7 @@
 
 /* Style the dropdown content */
 .dropdown-content {
-  align-items: ;
+  align-items: center;
   display: block;
   position: absolute;
   top: 50px;

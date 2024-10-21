@@ -57,18 +57,19 @@ export const updateProduct = async (req, res) => {
       stockQuantity,
       imageUrls,
       status,
-    }, { new: true, runValidators: true }); // Run validators to ensure data integrity
+    }, { new: true, runValidators: true });
 
     if (!updatedProduct) {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    res.status(200).json(updatedProduct); // Use 200 status for successful update
+    res.status(200).json(updatedProduct);
   } catch (err) {
-    console.error('Error updating product:', err); // Log the error for debugging
+    console.error('Error updating product:', err);
     res.status(500).json({ error: 'Failed to update product. Please try again later.' });
   }
 };
+
 
 // Delete product
 export const deleteProduct = async (req, res) => {
