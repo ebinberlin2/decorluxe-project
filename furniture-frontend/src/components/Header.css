@@ -175,9 +175,9 @@
   z-index: 1000;
 }
 
-/* Show dropdown content when hovering over the dropdown container */
-.dropdown-container:hover .dropdown-content {
-  display: block; /* Show dropdown on hover */
+/* Show dropdown content when the dropdown is open */
+.dropdown-container .dropdown-content {
+  display: block; /* Show dropdown when open */
 }
 
 /* Dropdown items */
@@ -205,13 +205,4 @@
 .dropdown-content button .icon {
   margin-right: 8px; /* Space between icon and text */
   font-size: 18px; /* Adjust icon size */
-}
-
-/* Ensure dropdown stays visible when hovering over it */
-.dropdown-container:hover .dropdown-content {
-  display: block; /* Keeps dropdown visible */
-}
-
-.dropdown-content:hover {
-  display: block; /* Keeps dropdown visible when hovering over dropdown content */
 }

@@ -37,6 +37,8 @@ const ProductPage = () => {
       filteredProducts = filteredProducts.filter(product => product.category === filter);
     }
 
+    console.log('Filtered Products:', filteredProducts); // Debugging line
+
     // Sort logic
     switch (sortOrder) {
       case 'price-asc':
@@ -73,10 +75,11 @@ const ProductPage = () => {
 
         <select onChange={(e) => setFilter(e.target.value)} value={filter}>
           <option value="all">All Categories</option>
-          <option value="furniture">Furniture</option>
-          <option value="decor">Decor</option>
-          <option value="lighting">Lighting</option>
-          <option value="bedroom">Bedroom</option>
+          <option value="Living Room Furniture">Living Room Furniture</option>
+          <option value="Bedroom Furniture">Bedroom Furniture</option>
+          <option value="Dining Room Furniture">Dining Room Furniture</option>
+          <option value="Office Furniture">Office Furniture</option>
+          <option value="Outdoor Furniture">Outdoor Furniture</option>
         </select>
       </div>
 
@@ -84,7 +87,6 @@ const ProductPage = () => {
         {sortedProducts().map((product) => (
           <div key={product._id} className="product-card">
             <Link to={`/products/${product._id}`} className="product-link">
-
               <img
                 src={product.imageUrls || 'https://via.placeholder.com/150'}
                 alt={product.name}

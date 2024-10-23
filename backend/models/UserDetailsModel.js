@@ -7,7 +7,23 @@ const userDetailsSchema = new mongoose.Schema({
         required: true,
         ref: 'User' // Reference to the User model
     },
+    fullName: {
+        type: String,
+        required: true
+    },
     address: {
+        type: String,
+        required: true
+    },
+    city: {
+        type: String,
+        required: true
+    },
+    district: {
+        type: String,
+        required: true
+    },
+    state: {
         type: String,
         required: true
     },
