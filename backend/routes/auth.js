@@ -1,14 +1,14 @@
 import express from 'express';
-import authMiddleware from '../middleware/authenticateToken.js'; // Middleware to check token
+import verifyToken from '../middleware/authenticateToken.js'; // Import the middleware
 import User from '../models/UserModel.js';
 import Seller from '../models/SellerModel.js';
 
 const router = express.Router();
 
 // Fetch user profile data
-router.get('/profile', authMiddleware, async (req, res) => {
+router.get('/profile', verifyToken, async (req, res) => {
     try {
-        const userId = req.user.id; // Assuming req.user is populated by authMiddleware
+        const userId = req.user.id; // Access user ID from the decoded token
         const user = await User.findById(userId);
         const seller = await Seller.findById(userId);
 

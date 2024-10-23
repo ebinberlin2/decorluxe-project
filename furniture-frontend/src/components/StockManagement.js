@@ -439,7 +439,7 @@ const StockManagement = () => {
                     </td>
                     <td>
                       <button onClick={() => handleEdit(product)}>Edit</button>
-                      <button onClick={() => handleDelete(product._id)}>Delete</button>
+                      {/* <button onClick={() => handleDelete(product._id)}>Delete</button> */}
                     </td>
                   </tr>
                 ))}

@@ -41,15 +41,19 @@ function Login() {
   
       if (response.status === 200) {
         const { token, role } = response.data;
+        console.log('User Role:', role); // Log the role to verify it
         localStorage.setItem('authToken', token);
   
         toast.success("Login successful!", { position: "top-center", autoClose: 3000 });
   
         setTimeout(() => {
-          if (role === 'seller') {
-            navigate('/seller'); 
+          console.log(`Redirecting to ${role}`); // Log the redirection target
+          if (role.toLowerCase() === 'admin') {
+            navigate('/admin');
+          } else if (role.toLowerCase() === 'seller') {
+            navigate('/seller');
           } else {
-            navigate('/'); 
+            navigate('/');
           }
         }, 3000);
       }

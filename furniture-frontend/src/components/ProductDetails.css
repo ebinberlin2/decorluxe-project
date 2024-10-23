@@ -1,130 +1,87 @@
-/* General body styles */
-body {
-  background-color: #f5f7f7; /* Dark background for contrast */
-  font-family: 'Poppins', sans-serif;
+/* ProductDetails.css */
+
+/* General Layout */
+.product-details-card {
+  max-width: 100%;
+  background-color: white;
 }
 
-/* Container for product details */
-#product-details-container {
-  max-width: 1200px;
-  margin: 0 auto; /* Center the container */
-  padding: 20px; /* Padding for spacing */
+/* Main Product Image */
+.main-product-image {
+  max-height: 300px;
+  object-fit: contain;
 }
 
-/* Product card styles */
-#product-card {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2),
-              0 0 25px rgba(0, 191, 255, 0.6); /* Glowing effect */
-  background-color: #ffffff; /* White background for contrast */
-  padding: 30px;
-  border-radius: 15px; /* Rounded edges */
-}
-
-/* Product Image column */
-#product-image-column {
-  padding: 0; /* Remove padding */
-}
-
-/* Product Image */
-#product-image {
-  max-width: 100% !important;
-  height: 500px !important; /* Fixed height for uniformity */
-  object-fit: cover !important; /* Ensures the image covers the space without distortion */
-  border-radius: 10px; /* Rounded corners for a modern look */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-}
-
-#product-card:hover #product-image {
-  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.3),
-              0 0 30px rgba(0, 191, 255, 0.7);
+/* Thumbnails */
+.image-thumbnail {
+  cursor: pointer;
+  margin: 0 5px;
+  padding: 5px;
+  border: 2px solid transparent;
   transition: all 0.3s ease;
 }
 
-/* Product Title */
-#product-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #020202;
-  margin-bottom: 20px;
-  text-align: center;
+.image-thumbnail img {
+  max-width: 75px;
+  max-height: 75px;
+  object-fit: cover;
 }
 
-/* Product Price */
-#product-price {
+.image-thumbnail:hover,
+.image-thumbnail.selected {
+  border-color: #007bff; /* Highlighted border on selected thumbnail */
+}
+
+/* Product Info Section */
+.product-info-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.product-title {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #ff5733; /* Accent color for the price */
-  margin-top: 10px;
+  margin-bottom: 0.5rem;
 }
 
-/* Product Description */
-#product-description {
+.product-price {
+  font-size: 1.6rem;
+  color: red;
+  font-weight: bold;
+}
+
+.product-description {
   font-size: 1.1rem;
-  color: #adb5bd;
-  line-height: 1.6;
-  margin-top: 15px;
+  margin-bottom: 1.5rem;
 }
 
-/* Product Rating */
-#product-rating {
-  font-size: 1.5rem;
-  color: #ffc107; /* Yellow color for star rating */
-  margin-bottom: 20px;
+.product-rating {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
 }
 
 /* Quantity Controls */
-#quantity-controls {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+.quantity-controls button {
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
 }
 
-/* Action Buttons */
-#action-buttons .btn {
-  border-radius: 25px;
-  padding: 10px 20px;
+.quantity-controls span {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+/* Buttons */
+.btn-lg {
   font-size: 1.1rem;
-}
-
-#add-to-cart-btn {
-  background-color: #e63946; /* Brighter red */
-  border: none;
-}
-
-#add-to-cart-btn:hover {
-  background-color: #c92d39; /* Darker red on hover */
-}
-
-#buy-now-btn {
-  background-color: #007bff;
-  border: none;
-}
-
-#buy-now-btn:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  padding: 10px 20px;
 }
 
 /* Wishlist Button */
-#wishlist-button .btn {
-  border: 1px solid #adb5bd;
-  color: #adb5bd;
+.wishlist-button {
+  display: flex;
+  justify-content: flex-start;
 }
 
-#wishlist-button .btn:hover {
-  color: #ffffff;
-  background-color: #adb5bd;
-}
-
-/* Full Product Description */
-#full-description-heading {
-  font-weight: bold;
-  color: #ffffff;
-  margin-top: 30px;
-}
-
-#full-description {
-  font-size: 1.1rem;
-  color: #adb5bd;
-  line-height: 1.6;
-  margin-top: 15px;
-}

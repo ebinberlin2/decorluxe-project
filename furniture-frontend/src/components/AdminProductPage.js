@@ -43,7 +43,7 @@ const AdminProductPage = () => {
                   <td>{product.description}</td>
                   <td>{product.category}</td>
                   <td>{product.subcategory}</td>
-                  <td>${product.price.toFixed(2)}</td>
+                  <td>Rs.{product.price.toFixed(2)}</td>
                   <td>{product.stockQuantity}</td>
                   <td>
                     {product.imageUrl && (

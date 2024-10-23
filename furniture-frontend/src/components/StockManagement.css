@@ -17,7 +17,7 @@
 /* Sidebar Styles */
 #sm-sidebar {
   background-color: #1c1c1e; /* Dark gray for elegance */
-  color: #e6e6e6; /* Soft light gray text */
+  color: #ffffff; /* White text for sidebar */
   width: 250px; /* Fixed width for sidebar */
   padding: 20px;
   box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5); /* Deeper shadow for depth */
@@ -29,7 +29,7 @@
   margin: 0 0 20px 0;
   font-weight: bold;
   font-size: 1.8rem; /* Larger font for titles */
-  color: #ffd700; /* Gold-like color for luxury feel */
+  color: #ffffff; /* White for consistency */
   text-align: center; /* Centered title */
 }
 
@@ -45,12 +45,12 @@
   margin: 5px 0; /* Space between items */
   transition: background-color 0.3s, color 0.3s;
   font-size: 1.1rem; /* Slightly larger font for better readability */
-  color: #e6e6e6; /* Light gray for text */
+  color: #ffffff; /* White text */
 }
 
 #sm-sidebar ul li:hover {
   background-color: #404040; /* Slightly lighter gray on hover */
-  color: #ffd700; /* Highlight color */
+  color: #ffffff; /* White on hover */
 }
 
 /* Active state */
@@ -64,6 +64,7 @@
   flex: 1; /* Allow main content to take up remaining space */
   padding: 20px;
   background-color: #2d2d2d; /* Dark background for contrast */
+  color: #ffffff; /* Ensure white text */
   overflow-y: auto; /* Allow scrolling if content overflows */
 }
 
@@ -75,6 +76,7 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+  color: #ffffff; /* Ensure white text */
 }
 
 /* Heading Styles */
@@ -82,7 +84,7 @@
   margin-bottom: 20px;
   font-weight: bold;
   font-size: 1.5rem; /* Consistent heading size */
-  color: #ffd700; /* Gold-like color for headings */
+  color: #ffffff; /* White for headings */
 }
 
 /* Form Group Styles */
@@ -96,7 +98,7 @@
   display: block;
   margin-bottom: 5px;
   font-size: 1rem;
-  color: #e6e6e6; /* Softer color for labels */
+  color: #ffffff; /* White for labels */
 }
 
 /* Input Styles */
@@ -153,6 +155,7 @@
   border-collapse: collapse; /* Collapses borders for a cleaner look */
   margin-top: 20px;
   background-color: #1e1e1e; /* Dark background for table */
+  color: #ffffff; /* White text for table */
 }
 
 /* Table Header Styles */
@@ -160,7 +163,7 @@
   padding: 12px;
   border: 1px solid #444; /* Dark border for header */
   text-align: left;
-  color: #ffd700; /* Gold text for header */
+  color: #ffffff; /* White text for header */
   background-color: #333; /* Darker background for header */
   font-weight: bold; /* Bold text for header */
 }

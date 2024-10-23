@@ -3,10 +3,32 @@ import Seller from '../models/SellerModel.js';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 
+// Hardcode admin credentials (in production, use environment variables)
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@example.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'adminpass123';
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Check if the user is admin first
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      // Generate token for admin
+      const token = jwt.sign(
+        { id: 'admin', email: ADMIN_EMAIL, role: 'admin' },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+
+      return res.status(200).json({
+        message: 'Admin login successful',
+        token,
+        role: 'admin',
+        redirectTo: '/admin', // Add this to let the frontend know it should redirect to admin page
+      });
+    }
+
+    // Proceed with regular user or seller login
     const user = await User.findOne({ email });
     const seller = await Seller.findOne({ email });
 
@@ -14,7 +36,7 @@ export const login = async (req, res) => {
       return res.status(404).json({ message: 'Account not found' });
     }
 
-    const account = user || seller;  // Use the found account
+    const account = user || seller; // Use the found account
     const role = user ? 'user' : 'seller';
 
     const isMatch = await argon2.verify(account.password, password);
@@ -22,6 +44,7 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
+    // Generate token for regular user or seller
     const token = jwt.sign(
       { id: account._id, email: account.email, role },
       process.env.JWT_SECRET,
