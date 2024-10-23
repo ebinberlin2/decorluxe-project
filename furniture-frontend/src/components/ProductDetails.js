@@ -146,11 +146,11 @@ const ProductDetails = () => {
             </div>
 
             {/* Quantity Controls */}
-            <div className="quantity-controls d-flex align-items-center mb-4">
+            {/* <div className="quantity-controls d-flex align-items-center mb-4">
               <button className="btn btn-outline-secondary" onClick={handleDecreaseQuantity}>-</button>
               <span className="mx-3 h5">{quantity}</span>
               <button className="btn btn-outline-secondary" onClick={handleIncreaseQuantity}>+</button>
-            </div>
+            </div> */}
 
             {/* Action Buttons */}
             <div className="mb-4">

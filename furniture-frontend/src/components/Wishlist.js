@@ -22,13 +22,15 @@ const Wishlist = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setWishlistItems(response.data);
+      setWishlistItems(response.data); // This will be an empty array if there are no items
+      setError(null); // Reset error if the request is successful
     } catch (error) {
       setError('Error fetching wishlist');
     } finally {
       setLoading(false);
     }
   };
+  
 
   const removeFromWishlist = async (wishlistItemId) => {
     const token = localStorage.getItem('authToken');

@@ -70,8 +70,8 @@ const Cart = () => {
                     <h5 className="cart-item-name">{item.product.name}</h5>
                     <p className="cart-item-price">Price: ₹{item.product.price}</p>
                     <div className="cart-item-quantity">
-                      <input type="number" value={item.quantity} className="cart-quantity-input" readOnly />
-                      <span>Total: ₹{item.product.price * item.quantity}</span>
+                      {/* <input type="number" value={item.quantity} className="cart-quantity-input" readOnly />
+                      <span>Total: ₹{item.product.price * item.quantity}</span> */}
                     </div>
                   </div>
                   <button className="cart-item-remove" onClick={() => handleRemoveFromCart(item._id)}>

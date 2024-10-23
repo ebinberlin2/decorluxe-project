@@ -17,6 +17,7 @@ import cartRoutes from './routes/cartRoutes.js';
 import upload from './middleware/upload.js'; // Adjust the path as necessary
 import path from 'path'; 
 
+
 const app = express();
 const port = 5000;
 connectDB();
@@ -39,7 +40,7 @@ app.use('/api/wishlist', WishlistRoutes); //
 app.use('/api/seller/signup', SellerRoutes); //
 app.use('/api/auth', auth);
 app.use('/api/userDetails', userDetailsRouter);
-app.use('/api/cart', cartRoutes); //
+app.use('/api/cart', cartRoutes); //z
 
 
 

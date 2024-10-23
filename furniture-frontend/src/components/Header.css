@@ -144,60 +144,74 @@
     height: 45px;
   }
 }
-
+/* Dropdown container */
 .dropdown-container {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center !important;
+  align-items: center;
 }
 
-/* Style the button and its label */
+/* Dropbtn styling */
 .dropbtn {
   cursor: pointer;
-  color: #e8e7e7;
+  color: #f8f5f5; /* Lighter color to contrast with dark background */
   display: flex;
   flex-direction: column;
-  padding-right: 10px;
   align-items: center;
+  padding-right: 10px;
 }
 
-/* Style the dropdown content */
+/* Dropdown content styling */
 .dropdown-content {
-  align-items: center;
-  display: block;
+  display: none; /* Hidden by default */
   position: absolute;
-  top: 50px;
+  top: 50px; /* Adjusted position to fit under the button */
   right: 0;
-  background-color: #0a0a0a; /* Dark background for dropdown */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background-color: #1a1a1a; /* Dark background */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Soft shadow */
   border-radius: 4px;
   min-width: 160px;
-  text-align: left;
   z-index: 1000;
 }
 
-/* Style dropdown items */
-.dropdown-content a {
+/* Show dropdown content when hovering over the dropdown container */
+.dropdown-container:hover .dropdown-content {
+  display: block; /* Show dropdown on hover */
+}
+
+/* Dropdown items */
+.dropdown-content a,
+.dropdown-content button {
   padding: 12px 16px; /* Adjusted padding for better spacing */
   color: #f8f5f5; /* White font color */
   text-decoration: none;
   display: flex; /* Use flexbox to align icons and text */
   align-items: center; /* Center vertically */
+  background: transparent; /* Transparent background */
+  border: none; /* No borders for buttons */
+  cursor: pointer; /* Change cursor to pointer */
+  transition: background-color 0.2s ease-in-out; /* Smooth hover transition */
 }
 
-/* Add icons */
-.dropdown-content a .icon {
+/* Hover effect for dropdown items */
+.dropdown-content a:hover,
+.dropdown-content button:hover {
+  background-color: #333333; /* Slightly lighter background on hover */
+}
+
+/* Add margin between icon and text */
+.dropdown-content a .icon,
+.dropdown-content button .icon {
   margin-right: 8px; /* Space between icon and text */
   font-size: 18px; /* Adjust icon size */
 }
 
-/* Hover effect */
-.dropdown-content a:hover {
-  background-color: #1a1a1a; /* Slightly lighter background on hover */
+/* Ensure dropdown stays visible when hovering over it */
+.dropdown-container:hover .dropdown-content {
+  display: block; /* Keeps dropdown visible */
 }
 
-/* Hide dropdown content when not hovered */
-.dropdown-container:hover .dropdown-content {
-  display: block; /* Show on hover */
+.dropdown-content:hover {
+  display: block; /* Keeps dropdown visible when hovering over dropdown content */
 }

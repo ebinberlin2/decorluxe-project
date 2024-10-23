@@ -1,6 +1,6 @@
 // wishlistRoutes.js
 import express from 'express';
-import { addToWishlist, getWishlist } from '../controllers/WishlistController.js';
+import { addToWishlist, getWishlist, removeFromWishlist } from '../controllers/WishlistController.js';
 import verifyToken from '../middleware/authenticateToken.js'; // Import your token verification middleware
 
 const router = express.Router();
@@ -10,5 +10,8 @@ router.post('/', verifyToken, addToWishlist);
 
 // Get user's wishlist
 router.get('/', verifyToken, getWishlist);
+
+// Remove product from wishlist
+router.delete('/:wishlistItemId', verifyToken, removeFromWishlist);
 
 export default router;
