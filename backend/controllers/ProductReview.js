@@ -19,6 +19,9 @@ export const addProduct = async (req, res) => {
     // Ensure imageUrls is an array
     const urls = Array.isArray(imageUrls) ? imageUrls : [imageUrls];
 
+    // Extract userId from the JWT token
+    const userId = req.userId; // Assuming userId is set in the request (see middleware below)
+
     // Create a new product object
     const newProduct = new Product({
       name,
@@ -31,6 +34,7 @@ export const addProduct = async (req, res) => {
       imageUrls: urls,
       measurements, // Include measurements
       status,
+      userId, // Set the userId from the token
     });
 
     // Save the product to the database

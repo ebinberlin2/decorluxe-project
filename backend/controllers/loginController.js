@@ -11,6 +11,8 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    console.log('Attempting to log in with email:', email);
+
     // Check if the user is admin first
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       // Generate token for admin
@@ -19,6 +21,8 @@ export const login = async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
       );
+
+      console.log('Admin Token:', token); // Log the token for admin login
 
       return res.status(200).json({
         message: 'Admin login successful',
@@ -31,6 +35,9 @@ export const login = async (req, res) => {
     // Proceed with regular user or seller login
     const user = await User.findOne({ email });
     const seller = await Seller.findOne({ email });
+
+    console.log('User found:', user);
+    console.log('Seller found:', seller);
 
     if (!user && !seller) {
       return res.status(404).json({ message: 'Account not found' });
@@ -51,6 +58,8 @@ export const login = async (req, res) => {
       { expiresIn: '1h' }
     );
 
+    console.log('User/Seller Token:', token); // Log the token for user/seller login
+
     const userData = {
       id: account._id,
       email: account.email,
@@ -66,7 +75,7 @@ export const login = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Login error:', error); // Log any errors that occur
     res.status(500).json({ message: 'Server error' });
   }
 };

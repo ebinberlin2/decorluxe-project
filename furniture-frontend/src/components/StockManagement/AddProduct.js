@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { jwtDecode } from "jwt-decode"; // Correct import
 import {
   TextField,
   Button,
@@ -36,10 +37,27 @@ const AddProduct = () => {
       weight: ''
     },
     status: 'active',
+    userId: '', // Initialize userId here
   });
   const [subcategories, setSubcategories] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  // Get user ID from token when component mounts
+  useEffect(() => {
+    const token = localStorage.getItem('authToken'); // Retrieve the token from localStorage
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token); // Use the correct function name
+        // Check if the token contains an ID and set it in productData
+        if (decodedToken.id) {
+          setProductData((prevData) => ({ ...prevData, userId: decodedToken.id }));
+        }
+      } catch (error) {
+        console.error('Invalid token:', error); // Handle invalid token
+      }
+    }
+  }, []);
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -88,25 +106,27 @@ const AddProduct = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Validation logic
     if (!productData.name || !productData.description || !productData.category || !productData.subcategory || productData.price <= 0 || productData.stockQuantity <= 0) {
       setError('Please fill in all required fields correctly.');
       return;
     }
-
+  
     // Log the product data before submission
     console.log('Submitting Product Data:', productData);
-
+  
     try {
+      const token = localStorage.getItem('authToken'); // Retrieve the token
       const response = await fetch('http://localhost:5000/api/products/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Include the token in the headers
         },
         body: JSON.stringify(productData),
       });
-
+  
       const result = await response.json();
       if (response.ok) {
         setSuccess(true);
@@ -128,14 +148,17 @@ const AddProduct = () => {
             weight: ''
           },
           status: 'active',
+          userId: '', // Reset userId
         });
       } else {
         setError(result.message || 'Failed to add product.');
       }
     } catch (error) {
       setError('An error occurred while adding the product.');
+      console.error('Submit Error:', error); // Log any additional errors
     }
   };
+  
 
   // Handle closing the error or success message
   const handleCloseAlert = () => {
@@ -273,96 +296,68 @@ const AddProduct = () => {
             <Grid container spacing={2}>
               <Grid item xs={3}>
                 <TextField
-                  id="width"
                   name="width"
                   label="Width"
                   fullWidth
-                  type="number"
                   value={productData.measurements.width}
                   onChange={handleMeasurementChange}
-                  inputProps={{ min: 0 }} // Prevent negative width
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
-                  id="height"
                   name="height"
                   label="Height"
                   fullWidth
-                  type="number"
                   value={productData.measurements.height}
                   onChange={handleMeasurementChange}
-                  inputProps={{ min: 0 }} // Prevent negative height
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
-                  id="depth"
                   name="depth"
                   label="Depth"
                   fullWidth
-                  type="number"
                   value={productData.measurements.depth}
                   onChange={handleMeasurementChange}
-                  inputProps={{ min: 0 }} // Prevent negative depth
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
-                  id="weight"
                   name="weight"
                   label="Weight"
                   fullWidth
-                  type="number"
                   value={productData.measurements.weight}
                   onChange={handleMeasurementChange}
-                  inputProps={{ min: 0 }} // Prevent negative weight
                 />
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Status</InputLabel>
-              <Select
-                id="status"
-                name="status"
-                value={productData.status}
-                onChange={handleInputChange}
-              >
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="inactive">Inactive</MenuItem>
-                <MenuItem value="out_of_stock">Out of Stock</MenuItem>
-                <MenuItem value="discontinued">Discontinued</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
           <Grid item xs={12} sm={12}>
             <TextField
-              id="newImageUrl"
               name="newImageUrl"
-              label="Image URL"
+              label="Add Image URL"
               fullWidth
               value={productData.newImageUrl}
               onChange={handleInputChange}
-              error={Boolean(error)} // Show error state if URL is invalid
-              helperText={error} // Display the error message below the input
             />
-            <Button onClick={handleAddImageUrl} variant="contained" color="primary" style={{ marginTop: 10 }}>
+            <Button variant="contained" onClick={handleAddImageUrl}>
               Add Image
             </Button>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="body1">
-              Image URLs:
-              {productData.imageUrls.map((url, index) => (
-                <div key={index}>{url}</div>
-              ))}
-            </Typography>
+            {productData.imageUrls.map((url, index) => (
+              <div key={index}>
+                <img src={url} alt={`Product Image ${index + 1}`} style={{ width: '100px', height: 'auto' }} />
+                <span onClick={() => {
+                  setProductData((prevData) => ({
+                    ...prevData,
+                    imageUrls: prevData.imageUrls.filter((_, i) => i !== index)
+                  }));
+                }} style={{ cursor: 'pointer', color: 'red' }}> Remove</span>
+              </div>
+            ))}
           </Grid>
           <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary">
-              Add Product
+              Submit Product
             </Button>
           </Grid>
         </Grid>
