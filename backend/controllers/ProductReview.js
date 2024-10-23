@@ -29,7 +29,7 @@ export const addProduct = async (req, res) => {
       price,
       stockQuantity,
       imageUrls: urls,
-      measurements, // Include measurements as provided
+      measurements, // Include measurements
       status,
     });
 
@@ -54,7 +54,7 @@ export const addProduct = async (req, res) => {
 export const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    res.status(200).json(products); // Use 200 status for successful retrieval
+    res.status(200).json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
     res.status(500).json({
@@ -66,11 +66,11 @@ export const getAllProducts = async (req, res) => {
 // Get product by ID
 export const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id); // Find product by ID
+    const product = await Product.findById(req.params.id);
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
-    res.status(200).json(product); // Use 200 status for successful retrieval
+    res.status(200).json(product);
   } catch (error) {
     console.error('Error fetching product:', error);
     res.status(500).json({
@@ -109,8 +109,8 @@ export const updateProduct = async (req, res) => {
         subcategory,
         price,
         stockQuantity,
-        imageUrls: urls, // Ensure imageUrls is an array
-        measurements, // Include measurements
+        imageUrls: urls,
+        measurements,
         status,
       },
       { new: true, runValidators: true }
@@ -138,7 +138,7 @@ export const deleteProduct = async (req, res) => {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    res.status(200).json({ message: 'Product deleted successfully' }); // Use 200 status for successful deletion
+    res.status(200).json({ message: 'Product deleted successfully' });
   } catch (error) {
     console.error('Error deleting product:', error);
     res.status(500).json({

@@ -69,6 +69,17 @@ const ViewProducts = () => {
     }));
   };
 
+  const handleMeasurementChange = (e) => {
+    const { name, value } = e.target;
+    setUpdatedData((prevData) => ({
+      ...prevData,
+      measurements: {
+        ...prevData.measurements,
+        [name]: value,
+      },
+    }));
+  };
+
   const handleUpdateProduct = async () => {
     try {
       const response = await fetch(`http://localhost:5000/api/products/edit/${selectedProduct._id}`, {
@@ -126,7 +137,7 @@ const ViewProducts = () => {
               <TableCell>{product.status}</TableCell>
               <TableCell>
                 {product.imageUrls.map((url, index) => (
-                  <img key={index} src={url} alt="Product" style={{ width: 50 }} />
+                  <img key={index} src={url} alt="Product" style={{ width: 50, marginRight: 5 }} />
                 ))}
               </TableCell>
               <TableCell>
@@ -164,6 +175,17 @@ const ViewProducts = () => {
                 multiline
                 rows={4}
                 value={updatedData.description}
+                onChange={handleInputChange}
+              />
+              <TextField
+                margin="dense"
+                name="additionalDescription"
+                label="Additional Description"
+                type="text"
+                fullWidth
+                multiline
+                rows={2}
+                value={updatedData.additionalDescription}
                 onChange={handleInputChange}
               />
               <TextField
@@ -211,7 +233,48 @@ const ViewProducts = () => {
                 value={updatedData.status}
                 onChange={handleInputChange}
               />
-              
+
+              {/* Measurements Fields */}
+              <Typography variant="h6" gutterBottom>
+                Measurements
+              </Typography>
+              <TextField
+                margin="dense"
+                name="width"
+                label="Width"
+                type="number"
+                fullWidth
+                value={updatedData.measurements?.width || ''}
+                onChange={handleMeasurementChange}
+              />
+              <TextField
+                margin="dense"
+                name="height"
+                label="Height"
+                type="number"
+                fullWidth
+                value={updatedData.measurements?.height || ''}
+                onChange={handleMeasurementChange}
+              />
+              <TextField
+                margin="dense"
+                name="depth"
+                label="Depth"
+                type="number"
+                fullWidth
+                value={updatedData.measurements?.depth || ''}
+                onChange={handleMeasurementChange}
+              />
+              <TextField
+                margin="dense"
+                name="weight"
+                label="Weight"
+                type="number"
+                fullWidth
+                value={updatedData.measurements?.weight || ''}
+                onChange={handleMeasurementChange}
+              />
+
               {/* Separate input fields for each image URL */}
               <Typography variant="h6" gutterBottom>
                 Image URLs

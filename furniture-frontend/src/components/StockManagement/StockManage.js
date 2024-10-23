@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { ThemeProvider, createTheme, CssBaseline, Drawer, List, ListItem, ListItemText, Toolbar, AppBar, Typography } from '@mui/material';
+import {
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Toolbar,
+  AppBar,
+  Typography,
+} from '@mui/material';
 import AddProduct from './AddProduct';
 import ViewProducts from './ViewProduct';
 
@@ -12,7 +23,11 @@ const StockManagement = () => {
 
   const theme = createTheme({
     palette: {
-      mode: 'light',
+      mode: 'dark', // Set the theme mode to dark
+      background: {
+        default: '#121212', // Dark background
+        paper: '#1E1E1E', // Paper background for cards and drawers
+      },
     },
   });
 
@@ -32,16 +47,16 @@ const StockManagement = () => {
         <div>
           <List>
             <ListItem button onClick={() => handleViewChange('add')}>
-              <ListItemText primary="Add Product" />
+              <ListItemText primary="Add Product" primaryTypographyProps={{ style: { color: '#ffffff' } }} />
             </ListItem>
             <ListItem button onClick={() => handleViewChange('view')}>
-              <ListItemText primary="View Products" />
+              <ListItemText primary="View Products" primaryTypographyProps={{ style: { color: '#ffffff' } }} />
             </ListItem>
           </List>
         </div>
       </Drawer>
 
-      <main style={{ marginLeft: 240, padding: 20 }}>
+      <main style={{ marginLeft: 240, padding: 20, backgroundColor: theme.palette.background.default }}>
         <Toolbar />
         {activeView === 'add' && <AddProduct />}
         {activeView === 'view' && <ViewProducts />}
