@@ -1,179 +1,153 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { FaStar, FaCartPlus, FaHeart } from 'react-icons/fa';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './ProductDetails.css'; // Custom CSS for styling
+import {
+  Container,
+  Grid,
+  Paper,
+  Typography,
+  Button,
+  Box,
+  IconButton,
+  Tabs,
+  Tab,
+  Fade,
+  Divider,
+  Tooltip,
+  createTheme,
+  ThemeProvider,
+} from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
+import { FaCartPlus, FaHeart } from 'react-icons/fa';
 import 'react-toastify/dist/ReactToastify.css';
+import './ProductDetails.css'; // Import the custom CSS file
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [quantity, setQuantity] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(''); // Main selected image
+  const [selectedImage, setSelectedImage] = useState('');
+  const [value, setValue] = useState(0); // For Tabs
 
   useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+        setProduct(response.data);
+        setSelectedImage(response.data.imageUrls[0]); // Set the first image as the selected one
+      } catch (error) {
+        setError('Error fetching product');
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchProduct();
   }, [id]);
 
-  const fetchProduct = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}`);
-      if (!response.ok) throw new Error('Network response was not ok');
-      const data = await response.json();
-      setProduct(data);
-      setSelectedImage(data.imageUrls[0]); // Set the first image as the main one
-    } catch (error) {
-      setError('Error fetching product: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
+  const handleTabChange = (event, newValue) => {
+    setValue(newValue);
   };
 
-  const addToWishlist = async (productId) => {
-    const token = localStorage.getItem('authToken');
-    if (!productId || !token) {
-      toast.error('Product ID or auth token is missing.', { position: 'top-center', autoClose: 3000 });
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        'http://localhost:5000/api/wishlist',
-        { productId },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (response.status === 201) {
-        toast.success(response.data.message, { position: 'top-center', autoClose: 3000 });
-      }
-    } catch (error) {
-      toast.error('Item Already in the wishlist', { position: 'top-center', autoClose: 3000 });
-    }
+  const addToCart = () => {
+    toast.success('Product added to cart!', { position: 'top-center' });
   };
 
-  const addToCart = async (productId) => {
-    const token = localStorage.getItem('authToken');
-    if (!productId || !token) {
-      toast.error('Product ID or auth token is missing.', { position: 'top-center', autoClose: 3000 });
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        'http://localhost:5000/api/cart',
-        { productId, quantity },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (response.status === 201) {
-        toast.success('Added to cart successfully!', { position: 'top-center', autoClose: 3000 });
-      }
-    } catch (error) {
-      if (error.response) {
-        const errorMessage = error.response.data.message || 'Failed to add to cart';
-        toast.error(errorMessage, { position: 'top-center', autoClose: 3000 });
-      }
-    }
+  const addToWishlist = () => {
+    toast.success('Product added to wishlist!', { position: 'top-center' });
   };
 
-  const handleIncreaseQuantity = () => {
-    setQuantity((prevQuantity) => prevQuantity + 1);
-  };
+  if (loading) return <div style={{ color: 'white' }}>Loading...</div>;
+  if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
-  const handleDecreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity((prevQuantity) => prevQuantity - 1);
-    }
-  };
-
-  const handleImageClick = (imageUrl) => {
-    setSelectedImage(imageUrl);
-  };
-
-  if (loading) return <div className="text-center my-5">Loading...</div>;
-  if (error) return <div className="text-center text-danger my-5">{error}</div>;
+  // Dark Theme
+  const theme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+  });
 
   return (
-    <>
-      <ToastContainer />
-      <div className="container mt-5 mb-5">
-        <div className="row shadow-lg rounded overflow-hidden bg-light product-details-card">
-          {/* Left Column: Product Image Grid */}
-          <div className="col-md-6 p-4 product-image-section">
-            <div className="row mb-3">
-              {/* Main Image */}
-              <div className="col-12 mb-3 text-center">
-                <img
-                  src={selectedImage}
-                  className="img-fluid main-product-image"
-                  alt="Main product"
-                />
-              </div>
+    <ThemeProvider theme={theme}>
+      <div style={{ backgroundColor: '#000000', minHeight: '100vh', padding: '20px' }}>
+        <ToastContainer />
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Grid container spacing={4}>
+            {/* Left Column: Images */}
+            <Grid item xs={12} md={6}>
+              <Paper elevation={4} className="product-details-left" sx={{ padding: 2, backgroundColor: '#1a1a1a' }}>
+                <Fade in={true} timeout={600}>
+                  <img src={selectedImage} alt={product.name} className="product-main-image" />
+                </Fade>
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                  {product.imageUrls.map((imageUrl, index) => (
+                    <Tooltip title={`View Image ${index + 1}`} key={index}>
+                      <IconButton onClick={() => setSelectedImage(imageUrl)}>
+                        <img
+                          src={imageUrl}
+                          alt={`Thumbnail ${index + 1}`}
+                          className={`product-thumbnail-image ${selectedImage === imageUrl ? 'selected' : ''}`}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  ))}
+                </Box>
+              </Paper>
+            </Grid>
 
-              {/* Image Thumbnails */}
-              <div className="col-12 d-flex flex-wrap justify-content-center">
-                {product.imageUrls && product.imageUrls.map((imageUrl, index) => (
-                  <div className="image-thumbnail" key={index} onClick={() => handleImageClick(imageUrl)}>
-                    <img
-                      src={imageUrl}
-                      className={`img-fluid ${selectedImage === imageUrl ? 'selected' : ''}`}
-                      alt={`Thumbnail ${index + 1}`}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+            {/* Right Column: Product Info */}
+            <Grid item xs={12} md={6}>
+              <Paper elevation={4} className="product-details-right" sx={{ padding: 2, backgroundColor: '#1a1a1a' }}>
+                <Typography variant="h4" className="product-title">{product.name}</Typography>
+                <Typography variant="h5" color="error" className="product-price">₹ {product.price}</Typography>
+                <Typography variant="body1" className="product-description">{product.description}</Typography>
 
-          {/* Right Column: Product Info */}
-          <div className="col-md-6 p-4 product-info-section">
-            <h1 className="product-title">{product.name}</h1>
-            <p className="product-price text-danger h4">₹ {product.price}</p>
-            <p className="product-description">{product.description}</p>
+                {/* Action Buttons */}
+                <Box sx={{ mt: 2 }}>
+                  <Button variant="contained" color="primary" onClick={addToCart} sx={{ mr: 2 }}>
+                    <FaCartPlus style={{ marginRight: '8px' }} /> Add to Cart
+                  </Button>
+                  <Button variant="outlined" onClick={addToWishlist}>
+                    <FaHeart style={{ marginRight: '8px' }} /> Add to Wishlist
+                  </Button>
+                </Box>
 
-            {/* Rating */}
-            <div className="product-rating d-flex align-items-center mb-3">
-              <span className="text-warning h5">
-                {product.rating || 0} <FaStar />
-              </span>
-              <span className="ml-2">({product.numReviews || 0} Ratings)</span>
-            </div>
-
-            {/* Quantity Controls */}
-            {/* <div className="quantity-controls d-flex align-items-center mb-4">
-              <button className="btn btn-outline-secondary" onClick={handleDecreaseQuantity}>-</button>
-              <span className="mx-3 h5">{quantity}</span>
-              <button className="btn btn-outline-secondary" onClick={handleIncreaseQuantity}>+</button>
-            </div> */}
-
-            {/* Action Buttons */}
-            <div className="mb-4">
-              <button className="btn btn-danger btn-lg mr-2" onClick={() => addToCart(product._id)}>
-                <FaCartPlus className="mr-2" /> Add to Cart
-              </button>
-              <button className="btn btn-primary btn-lg">Buy Now</button>
-            </div>
-
-            {/* Wishlist */}
-            <div className="mb-4">
-              <button className="btn btn-outline-secondary" onClick={() => addToWishlist(product._id)}>
-                <FaHeart className="mr-2" /> Add to Wishlist
-              </button>
-            </div>
-
-            {/* Full Description */}
-            <h5 className="mt-4">Product Description</h5>
-            <p>{product.fullDescription || 'No additional description available.'}</p>
-          </div>
-        </div>
+                {/* Tabbed Information */}
+                <Box sx={{ mt: 4 }}>
+                  <Tabs value={value} onChange={handleTabChange} variant="fullWidth" textColor="inherit">
+                    <Tab label="Description" />
+                    <Tab label="Measurements" />
+                    <Tab label="Additional Info" />
+                  </Tabs>
+                  <Divider sx={{ my: 1 }} />
+                  <Box sx={{ padding: 2 }}>
+                    {value === 0 && (
+                      <Typography variant="body2" className="tab-content">
+                        {product.additionalDescription || 'No additional description available.'}
+                      </Typography>
+                    )}
+                    {value === 1 && product.measurements && (
+                      <Typography variant="body2" className="tab-content">
+                        {`Width: ${product.measurements.width} cm`}
+                        <br />
+                        {`Depth: ${product.measurements.depth} cm`}
+                        <br />
+                        {`Height: ${product.measurements.height} cm`}
+                        <br />
+                        {`Weight: ${product.measurements.weight} kg`}
+                      </Typography>
+                    )}
+                    {value === 2 && (
+                      <Typography variant="body2" className="tab-content">No additional information available.</Typography>
+                    )}
+                  </Box>
+                </Box>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Container>
       </div>
-    </>
+    </ThemeProvider>
   );
 };
 

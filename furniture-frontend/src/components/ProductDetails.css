@@ -1,87 +1,60 @@
 /* ProductDetails.css */
 
-/* General Layout */
-.product-details-card {
-  max-width: 100%;
-  background-color: white;
+.product-details-left {
+  background-color: #1a1a1a;
+  border-radius: 8px;
 }
 
-/* Main Product Image */
-.main-product-image {
-  max-height: 300px;
-  object-fit: contain;
+.product-main-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
 }
 
-/* Thumbnails */
-.image-thumbnail {
-  cursor: pointer;
+.product-main-image:hover {
+  transform: scale(1.05);
+}
+
+.product-thumbnail-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
   margin: 0 5px;
-  padding: 5px;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
+  transition: border 0.3s ease;
 }
 
-.image-thumbnail img {
-  max-width: 75px;
-  max-height: 75px;
-  object-fit: cover;
+.product-thumbnail-image.selected {
+  border: 2px solid #1976d2; /* Highlight color */
 }
 
-.image-thumbnail:hover,
-.image-thumbnail.selected {
-  border-color: #007bff; /* Highlighted border on selected thumbnail */
-}
-
-/* Product Info Section */
-.product-info-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.product-thumbnail-image:hover {
+  cursor: pointer;
+  border: 2px solid #1976d2; /* Highlight on hover */
 }
 
 .product-title {
-  font-size: 1.8rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  color: #ffffff;
 }
 
 .product-price {
-  font-size: 1.6rem;
-  color: red;
-  font-weight: bold;
+  color: #ff1744; /* Bright red for price */
 }
 
 .product-description {
-  font-size: 1.1rem;
-  margin-bottom: 1.5rem;
+  color: #b0bec5; /* Light gray for description */
 }
 
-.product-rating {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
+.tab-content {
+  color: #b0bec5; /* Light gray for tab content */
 }
 
-/* Quantity Controls */
-.quantity-controls button {
-  width: 40px;
-  height: 40px;
-  font-size: 1.2rem;
+button {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.quantity-controls span {
-  font-size: 1.4rem;
-  font-weight: bold;
+button:hover {
+  background-color: #1976d2; /* Button hover color */
+  color: #fff;
 }
-
-/* Buttons */
-.btn-lg {
-  font-size: 1.1rem;
-  padding: 10px 20px;
-}
-
-/* Wishlist Button */
-.wishlist-button {
-  display: flex;
-  justify-content: flex-start;
-}
-
