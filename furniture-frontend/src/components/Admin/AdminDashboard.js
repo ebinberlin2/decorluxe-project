@@ -1,5 +1,6 @@
+// src/components/AdminDashboard.js
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import AdminSidebar from './AdminSidebar'; // Import the sidebar component
 import 'tailwindcss/tailwind.css';
 
 const AdminDashboard = () => {
@@ -110,25 +111,7 @@ const AdminDashboard = () => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className="fixed top-0 left-0 h-full w-64 bg-gray-800 shadow-lg">
-        <div className="flex justify-center items-center h-16 border-b border-gray-700">
-          <h1 className="text-2xl font-bold text-white">Admin</h1>
-        </div>
-        <nav className="mt-6">
-          <ul className="space-y-4">
-            <li className="px-4 py-2 hover:bg-gray-700 rounded-lg">
-              <Link to="#" onClick={() => setActiveSection('sellers')} className="flex items-center text-white">
-                Sellers
-              </Link>
-            </li>
-            <li className="px-4 py-2 hover:bg-gray-700 rounded-lg">
-              <Link to="#" onClick={() => setActiveSection('products')} className="flex items-center text-white">
-                Products
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <AdminSidebar activeSection={activeSection} setActiveSection={setActiveSection} />
 
       {/* Main Content */}
       <div className="ml-64 p-8 w-full">

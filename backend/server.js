@@ -16,8 +16,8 @@ import userDetailsRouter from './routes/UserDetailsRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import upload from './middleware/upload.js'; // Adjust the path as necessary
 import path from 'path'; 
-
-
+import sellerRoutes from './routes/Admin/sellerRoutes.js';
+import userRoutes from './routes/Admin/userRoutes.js';
 const app = express();
 const port = 5000;
 connectDB();
@@ -41,8 +41,8 @@ app.use('/api/seller/signup', SellerRoutes); //
 app.use('/api/auth', auth);
 app.use('/api/userDetails', userDetailsRouter);
 app.use('/api/cart', cartRoutes); //z
-
-
+app.use('/api/admin/sellers', sellerRoutes);
+app.use('/api/admin', userRoutes); 
 
 
 app.listen(port, () => {
