@@ -18,11 +18,33 @@ const verifyToken = (req, res, next) => {
     });
 };
 
-// Create or Update User Details
+// GET route to fetch user details
+router.get('/', verifyToken, async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        // Check if user exists
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).send('User not found.');
+
+        // Fetch user details
+        const userDetails = await UserDetails.findOne({ userId });
+        if (!userDetails) return res.status(404).send('User details not found.');
+
+        return res.json(userDetails); // Send the user details as response
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching user details.');
+    }
+});
+
+// POST route to create or update user details
 router.post('/', verifyToken, async (req, res) => {
-    const { userId, fullName, address, city, district, state, phone, dateOfBirth } = req.body;
+    const { fullName, address, city, district, state, phone, dateOfBirth } = req.body;
 
     try {
+        const userId = req.user.id;
+
         // Check if user exists
         const user = await User.findById(userId);
         if (!user) return res.status(404).send('User not found.');

@@ -19,12 +19,12 @@ import {
 
 const theme = createTheme({
     palette: {
-        mode: 'dark', // Set to dark theme
+        mode: 'dark', // Dark theme
     },
 });
 
 const Profile = () => {
-    const [user, setUser] = useState(null);
+    const [userProfile, setUserProfile] = useState(null); // Store user profile data
     const [error, setError] = useState(null);
     const [fullName, setFullName] = useState('');
     const [address, setAddress] = useState('');
@@ -35,10 +35,11 @@ const Profile = () => {
     const [dateOfBirth, setDateOfBirth] = useState('');
     const navigate = useNavigate();
 
+    // Fetch user profile data on component load
     useEffect(() => {
-        const fetchUserData = async () => {
+        const fetchUserProfile = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/auth/profile', {
+                const response = await fetch('http://localhost:5000/api/userDetails', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -48,28 +49,28 @@ const Profile = () => {
 
                 if (!response.ok) {
                     if (response.status === 401) {
-                        navigate('/login');
+                        navigate('/login'); // If unauthorized, redirect to login
                     } else {
-                        throw new Error('Failed to fetch user data');
+                        throw new Error('Failed to fetch user profile');
                     }
                 }
 
-                const data = await response.json();
-                setUser(data);
-                setFullName(`${data.firstName} ${data.lastName}`);
-                setAddress(data.address || '');
-                setCity(data.city || '');
-                setDistrict(data.district || '');
-                setState(data.state || '');
-                setPhone(data.phone || '');
-                setDateOfBirth(data.dateOfBirth || '');
+                const profileData = await response.json();
+                setUserProfile(profileData); // Store user profile data
+                setFullName(profileData.fullName || ''); // Pre-fill fields
+                setAddress(profileData.address || '');
+                setCity(profileData.city || '');
+                setDistrict(profileData.district || '');
+                setState(profileData.state || '');
+                setPhone(profileData.phone || '');
+                setDateOfBirth(profileData.dateOfBirth ? profileData.dateOfBirth.split('T')[0] : ''); // Date in YYYY-MM-DD format
             } catch (error) {
-                console.error("Error fetching user data:", error);
-                setError("Failed to fetch user data. Please try again later.");
+                console.error("Error fetching user profile:", error);
+                setError("Failed to load user profile. Please try again later.");
             }
         };
 
-        fetchUserData();
+        fetchUserProfile();
     }, [navigate]);
 
     const handleLogout = () => {
@@ -88,7 +89,7 @@ const Profile = () => {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
                 },
                 body: JSON.stringify({
-                    userId: user.id,
+                    userId: userProfile.userId, // Ensure you're sending user ID
                     fullName,
                     address,
                     city,
@@ -103,10 +104,10 @@ const Profile = () => {
                 throw new Error('Failed to save user details');
             }
 
-            alert("User details saved successfully!");
+            alert("Profile details saved successfully!");
         } catch (error) {
-            console.error("Error saving user details:", error);
-            setError("Failed to save user details. Please try again later.");
+            console.error("Error saving profile details:", error);
+            setError("Failed to save profile details. Please try again later.");
         }
     };
 
@@ -114,7 +115,7 @@ const Profile = () => {
         return <Typography color="error" align="center">{error}</Typography>;
     }
 
-    if (!user) {
+    if (!userProfile) {
         return <Typography color="warning" align="center">Loading...</Typography>;
     }
 
@@ -215,6 +216,7 @@ const Profile = () => {
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
+                                    required
                                 />
                                 <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
                                     Save Details

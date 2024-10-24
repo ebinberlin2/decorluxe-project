@@ -20,7 +20,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import { FaCartPlus, FaHeart } from 'react-icons/fa';
 import 'react-toastify/dist/ReactToastify.css';
-import './ProductDetails.css'; // Import the custom CSS file
+import './ProductDetails.css';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -29,13 +29,14 @@ const ProductDetails = () => {
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState('');
   const [value, setValue] = useState(0); // For Tabs
+  const [quantity, setQuantity] = useState(1); // State for quantity
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/products/${id}`);
         setProduct(response.data);
-        setSelectedImage(response.data.imageUrls[0]); // Set the first image as the selected one
+        setSelectedImage(response.data.imageUrls[0]);
       } catch (error) {
         setError('Error fetching product');
       } finally {
@@ -49,18 +50,64 @@ const ProductDetails = () => {
     setValue(newValue);
   };
 
-  const addToCart = () => {
-    toast.success('Product added to cart!', { position: 'top-center' });
+  // Function to add product to cart
+  const addToCart = async () => {
+    if (!product) return;
+
+    const token = localStorage.getItem('authToken');
+  
+    try {
+      const response = await axios.post('http://localhost:5000/api/cart', {
+        productId: product._id,
+        quantity,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success(response.data.message, { position: 'top-center' });
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        toast.error('You are not authorized. Please log in.', { position: 'top-center' });
+      } else {
+        toast.error('Error adding product to cart', { position: 'top-center' });
+      }
+    }
   };
 
-  const addToWishlist = () => {
-    toast.success('Product added to wishlist!', { position: 'top-center' });
+  // Function to add product to wishlist
+  const addToWishlist = async () => {
+    if (!product) return;
+
+    const token = localStorage.getItem('authToken');
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/wishlist', {
+        productId: product._id,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success(response.data.message, { position: 'top-center' });
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        toast.error('You are not authorized. Please log in.', { position: 'top-center' });
+      } else if (error.response && error.response.status === 400) {
+        toast.error(error.response.data.message, { position: 'top-center' });
+      } else {
+        toast.error('Error adding product to wishlist', { position: 'top-center' });
+      }
+    }
+  };
+
+  const handleQuantityChange = (event) => {
+    setQuantity(event.target.value);
   };
 
   if (loading) return <div style={{ color: 'white' }}>Loading...</div>;
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
-  // Dark Theme
   const theme = createTheme({
     palette: {
       mode: 'dark',
@@ -101,6 +148,18 @@ const ProductDetails = () => {
                 <Typography variant="h4" className="product-title">{product.name}</Typography>
                 <Typography variant="h5" color="error" className="product-price">₹ {product.price}</Typography>
                 <Typography variant="body1" className="product-description">{product.description}</Typography>
+
+                {/* Quantity Input */}
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="body1" className="quantity-label">Quantity:</Typography>
+                  <input
+                    type="number"
+                    min="1"
+                    value={quantity}
+                    onChange={handleQuantityChange}
+                    style={{ width: '50px', marginLeft: '10px' }}
+                  />
+                </Box>
 
                 {/* Action Buttons */}
                 <Box sx={{ mt: 2 }}>

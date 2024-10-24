@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { jwtDecode } from "jwt-decode"; // Incorrect import
-// Notice the underscore
-// Correct import
+import { jwtDecode } from "jwt-decode"; // Ensure this import is correct
 import {
   TextField,
   Button,
@@ -16,9 +14,78 @@ import {
 } from '@mui/material';
 
 const categories = {
-  'Living Room Furniture': ['Sofas', 'Armchairs', 'Coffee Tables'],
-  'Bedroom Furniture': ['Beds', 'Nightstands', 'Dressers'],
-  // Add more categories here...
+  'Furniture': [
+    'Chair',
+    'Table',
+    'Sofa',
+    'Bed',
+    'Desk',
+    'Bookshelf',
+    'Cabinet',
+  ],
+  'Lighting': [
+    'Chandelier',
+    'Table Lamp',
+    'Floor Lamp',
+    'Wall Sconce',
+    'Pendant Light',
+    'Outdoor Light',
+    'Track Lighting',
+  ],
+  'Decoration': [
+    'Wall Art',
+    'Mirror',
+    'Rug',
+    'Curtain',
+    'Vase',
+    'Candle Holder',
+    'Wall Clock',
+  ],
+  'Bedding': [
+    'Duvet',
+    'Pillow',
+    'Bed Sheet',
+    'Bed Frame',
+    'Comforter',
+    'Bed Skirt',
+    'Bedding Set',
+  ],
+  'Storage': [
+    'Shelf',
+    'Storage Bin',
+    'Wardrobe',
+    'Shoe Rack',
+    'Chest of Drawers',
+    'Cabinet',
+    'Trunk',
+  ],
+  'Outdoor': [
+    'Patio Chair',
+    'Garden Table',
+    'Lounge Chair',
+    'Umbrella',
+    'Fire Pit',
+    'Outdoor Sofa',
+    'BBQ Grill',
+  ],
+  'Office': [
+    'Office Chair',
+    'Desk',
+    'Filing Cabinet',
+    'Bookcase',
+    'Conference Table',
+    'Cubicle',
+    'Desk Organizer',
+  ],
+  'Children’s Furniture': [
+    'Bunk Bed',
+    'Toy Box',
+    'Kids Chair',
+    'Kids Desk',
+    'Changing Table',
+    'Playhouse',
+    'Crib',
+  ],
 };
 
 const AddProduct = () => {
@@ -41,6 +108,7 @@ const AddProduct = () => {
     status: 'active',
     userId: '', // Initialize userId here
   });
+  
   const [subcategories, setSubcategories] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -50,7 +118,7 @@ const AddProduct = () => {
     const token = localStorage.getItem('authToken'); // Retrieve the token from localStorage
     if (token) {
       try {
-        const decodedToken = jwtDecode(token); // Use the correct function name
+        const decodedToken = jwtDecode(token); // Decode the JWT
         // Check if the token contains an ID and set it in productData
         if (decodedToken.id) {
           setProductData((prevData) => ({ ...prevData, userId: decodedToken.id }));
@@ -161,7 +229,6 @@ const AddProduct = () => {
     }
   };
   
-
   // Handle closing the error or success message
   const handleCloseAlert = () => {
     setError('');
@@ -194,7 +261,6 @@ const AddProduct = () => {
         )}
 
         <Grid container spacing={3}>
-          {/* Form fields remain unchanged */}
           <Grid item xs={12} sm={6}>
             <TextField
               required
@@ -233,6 +299,7 @@ const AddProduct = () => {
                 value={productData.subcategory}
                 onChange={handleInputChange}
                 required
+                disabled={!productData.category} // Disable if no category is selected
               >
                 {subcategories.map((sub) => (
                   <MenuItem key={sub} value={sub}>
@@ -252,7 +319,7 @@ const AddProduct = () => {
               type="number"
               value={productData.price}
               onChange={handleInputChange}
-              inputProps={{ min: 0 }} // Prevent negative price
+              inputProps={{ min: 0 }} // Prevent negative prices
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -268,101 +335,96 @@ const AddProduct = () => {
               inputProps={{ min: 0 }} // Prevent negative stock
             />
           </Grid>
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12}>
             <TextField
               required
               id="description"
               name="description"
               label="Description"
-              fullWidth
               multiline
               rows={4}
+              fullWidth
               value={productData.description}
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12}>
             <TextField
               id="additionalDescription"
               name="additionalDescription"
               label="Additional Description"
-              fullWidth
               multiline
-              rows={2}
+              rows={4}
+              fullWidth
               value={productData.additionalDescription}
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={12} sm={12}>
-            <Typography variant="h6">Measurements</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={3}>
-                <TextField
-                  name="width"
-                  label="Width"
-                  fullWidth
-                  value={productData.measurements.width}
-                  onChange={handleMeasurementChange}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  name="height"
-                  label="Height"
-                  fullWidth
-                  value={productData.measurements.height}
-                  onChange={handleMeasurementChange}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  name="depth"
-                  label="Depth"
-                  fullWidth
-                  value={productData.measurements.depth}
-                  onChange={handleMeasurementChange}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  name="weight"
-                  label="Weight"
-                  fullWidth
-                  value={productData.measurements.weight}
-                  onChange={handleMeasurementChange}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12}>
             <TextField
+              id="newImageUrl"
               name="newImageUrl"
               label="Add Image URL"
               fullWidth
               value={productData.newImageUrl}
               onChange={handleInputChange}
+              onKeyPress={(e) => e.key === 'Enter' && handleAddImageUrl()}
             />
-            <Button variant="contained" onClick={handleAddImageUrl}>
+            <Button onClick={handleAddImageUrl} variant="contained" color="primary" style={{ marginTop: '8px' }}>
               Add Image
             </Button>
-            {productData.imageUrls.map((url, index) => (
-              <div key={index}>
-                <img src={url} alt={`Product Image ${index + 1}`} style={{ width: '100px', height: 'auto' }} />
-                <span onClick={() => {
-                  setProductData((prevData) => ({
-                    ...prevData,
-                    imageUrls: prevData.imageUrls.filter((_, i) => i !== index)
-                  }));
-                }} style={{ cursor: 'pointer', color: 'red' }}> Remove</span>
-              </div>
-            ))}
+            {/* Display added image URLs */}
+            <div style={{ marginTop: '8px' }}>
+              {productData.imageUrls.map((url, index) => (
+                <div key={index}>{url}</div>
+              ))}
+            </div>
           </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary">
-              Submit Product
-            </Button>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="width"
+              name="width"
+              label="Width (cm)"
+              fullWidth
+              value={productData.measurements.width}
+              onChange={handleMeasurementChange}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="height"
+              name="height"
+              label="Height (cm)"
+              fullWidth
+              value={productData.measurements.height}
+              onChange={handleMeasurementChange}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="depth"
+              name="depth"
+              label="Depth (cm)"
+              fullWidth
+              value={productData.measurements.depth}
+              onChange={handleMeasurementChange}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="weight"
+              name="weight"
+              label="Weight (kg)"
+              fullWidth
+              value={productData.measurements.weight}
+              onChange={handleMeasurementChange}
+            />
           </Grid>
         </Grid>
+
+        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '16px' }}>
+          Add Product
+        </Button>
       </form>
     </>
   );

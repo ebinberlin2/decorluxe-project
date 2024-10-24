@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './CategoriesPage.css';
 import { FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom'; // Import Link for navigation
+import { ToastContainer, toast } from 'react-toastify'; // Import Toast for notifications
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
@@ -57,11 +60,57 @@ const ProductPage = () => {
     return filteredProducts;
   };
 
+  // Function to add product to cart
+  const addToCart = async (productId) => {
+    const token = localStorage.getItem('authToken'); // Get token from local storage
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/cart', {
+        productId,
+        quantity: 1, // Assuming 1 item for simplicity
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to headers
+        },
+      });
+      toast.success(response.data.message, { position: 'top-center' });
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        toast.error('You are not authorized. Please log in.', { position: 'top-center' });
+      } else {
+        toast.error('Error adding product to cart', { position: 'top-center' });
+      }
+    }
+  };
+
+  // Function to add product to wishlist
+  const addToWishlist = async (productId) => {
+    const token = localStorage.getItem('authToken'); // Get token from local storage
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/wishlist', {
+        productId,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to headers
+        },
+      });
+      toast.success(response.data.message, { position: 'top-center' });
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        toast.error('You are not authorized. Please log in.', { position: 'top-center' });
+      } else {
+        toast.error('Error adding product to wishlist', { position: 'top-center' });
+      }
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <div className="product-page">
+      <ToastContainer /> {/* Toast notifications */}
       <h1 className="page-title">Discover Our Luxury Collection</h1>
 
       {/* Sort and Filter Bar */}
@@ -88,7 +137,7 @@ const ProductPage = () => {
           <div key={product._id} className="product-card">
             <Link to={`/products/${product._id}`} className="product-link">
               <img
-                src={product.imageUrls || 'https://via.placeholder.com/150'}
+                src={product.imageUrls.length > 0 ? product.imageUrls[0] : 'https://via.placeholder.com/150'}
                 alt={product.name}
                 className="product-image"
               />
@@ -103,10 +152,10 @@ const ProductPage = () => {
               </div>
             </Link>
             <div className="product-actions">
-              <button className="wishlist-btn">
+              <button className="wishlist-btn" onClick={() => addToWishlist(product._id)}>
                 <FaHeart /> Wishlist
               </button>
-              <button className="cart-btn">
+              <button className="cart-btn" onClick={() => addToCart(product._id)}>
                 <FaShoppingCart /> Add to Cart
               </button>
             </div>
