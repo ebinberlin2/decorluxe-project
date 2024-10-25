@@ -8,6 +8,18 @@ import 'bootstrap/dist/js/bootstrap.bundle.min'; // This line includes Bootstrap
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+
+function loadRazorpay() {
+  const script = document.createElement('script');
+  script.src = "https://checkout.razorpay.com/v1/checkout.js";
+  script.async = true;
+  document.body.appendChild(script);
+}
+
+loadRazorpay();
+
+
 root.render(
   <React.StrictMode>
     <App />

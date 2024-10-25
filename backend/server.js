@@ -18,6 +18,12 @@ import upload from './middleware/upload.js'; // Adjust the path as necessary
 import path from 'path'; 
 import sellerRoutes from './routes/Admin/sellerRoutes.js';
 import userRoutes from './routes/Admin/userRoutes.js';
+import checkoutRoutes from './routes/payment/checkoutRoutes.js';
+
+
+
+
+
 const app = express();
 const port = 5000;
 connectDB();
@@ -43,6 +49,7 @@ app.use('/api/userDetails', userDetailsRouter);
 app.use('/api/cart', cartRoutes); //z
 app.use('/api/admin/sellers', sellerRoutes);
 app.use('/api/admin', userRoutes); 
+app.use('/api/checkout', checkoutRoutes);
 
 
 app.listen(port, () => {

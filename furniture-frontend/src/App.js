@@ -21,6 +21,7 @@ import AdminSellersPage from './components/Admin/adminSellerPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import AdminUserPage from './components/Admin/AdminUserPage';
+import Checkout from './components/payment/checkout';
 const App = () => (
   <Router>
     
@@ -43,6 +44,7 @@ const App = () => (
       <Route path="/view-products" element={<ViewProduct />} /> {/* Changed to ViewProduct */}
       <Route path="/admin/sellers" element={<AdminSellersPage />} /> {/* Changed to AdminSellersPage */}
       <Route path="/admin/users" element={<AdminUserPage />} /> 
+      <Route path="/checkout" element={<Checkout />} /> 
     </Routes>
   </Router>
 );

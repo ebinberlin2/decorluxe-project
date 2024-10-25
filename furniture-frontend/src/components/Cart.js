@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { FaTrash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import './Cart.css'; // Import the new design
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   useEffect(() => {
     fetchCartItems();
@@ -43,10 +45,10 @@ const Cart = () => {
     }
   };
 
+  const totalCost = cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+
   if (loading) return <div className="text-center my-5">Loading...</div>;
   if (error) return <div className="text-center text-danger my-5">{error}</div>;
-
-  const totalCost = cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
 
   return (
     <>
@@ -70,7 +72,8 @@ const Cart = () => {
                     <h5 className="cart-item-name">{item.product.name}</h5>
                     <p className="cart-item-price">Price: ₹{item.product.price}</p>
                     <div className="cart-item-quantity">
-                      {/* <input type="number" value={item.quantity} className="cart-quantity-input" readOnly />
+                      {/* Uncomment if you want to show quantity
+                      <input type="number" value={item.quantity} className="cart-quantity-input" readOnly />
                       <span>Total: ₹{item.product.price * item.quantity}</span> */}
                     </div>
                   </div>
@@ -96,7 +99,9 @@ const Cart = () => {
                 <span>Grand Total</span>
                 <span>₹{totalCost}</span>
               </div>
-              <button className="checkout-btn">Proceed to Checkout</button>
+              <button className="checkout-btn" onClick={() => navigate('/checkout')}>
+                Proceed to Checkout
+              </button>
             </div>
           </div>
         )}
