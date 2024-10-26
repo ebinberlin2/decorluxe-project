@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate for navigation
 
 const Checkout = () => {
   const [userDetails, setUserDetails] = useState({
@@ -25,8 +26,9 @@ const Checkout = () => {
     country: '',
   });
 
-  const [items, setItems] = useState([]); // State for items
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();  // Initialize navigate
 
   // Function to fetch cart items
   useEffect(() => {
@@ -43,21 +45,15 @@ const Checkout = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        console.log('API Response:', data); // Log entire API response
-
-        // Check if data is valid and contains items
         if (Array.isArray(data) && data.length > 0) {
-          console.log('Fetched cart items:', data); // Log fetched items
-          setItems(data); // Set cart items in the items state
+          setItems(data);
         } else {
-          console.warn('No items found in cart.');
           toast.warn('No items found in cart.');
         }
       } catch (error) {
-        console.error('Error fetching cart items:', error);
         toast.error('Failed to load cart items. Please try again.');
       } finally {
-        setLoading(false); // Stop loading regardless of success or failure
+        setLoading(false);
       }
     };
 
@@ -72,20 +68,14 @@ const Checkout = () => {
     const token = localStorage.getItem('authToken');
 
     try {
-      console.log('User Details Before Payment:', userDetails); // Log user details
-
-      // Prepare order data to include items and user details
-      const orderData = {
-        ...userDetails,
-        items,
-      };
+      const orderData = { ...userDetails, items };
 
       const { data } = await axios.post('http://localhost:5000/api/checkout/create', orderData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const options = {
-        key: 'rzp_test_Afc2OwMLThkxdk', // Razorpay test key
+        key: 'rzp_test_Afc2OwMLThkxdk',
         amount: data.order.totalAmount,
         currency: 'INR',
         name: 'Your Shop',
@@ -93,18 +83,15 @@ const Checkout = () => {
         order_id: data.razorpayOrderId,
         handler: async (response) => {
           try {
-            console.log('Razorpay Response:', response); // Log Razorpay response
-
             const verifyResponse = await axios.post('http://localhost:5000/api/checkout/verify-payment', {
-              orderId: data.order._id, // Use the correct order ID
+              orderId: data.order._id,
               paymentId: response.razorpay_payment_id,
               razorpaySignature: response.razorpay_signature,
             }, { headers: { Authorization: `Bearer ${token}` } });
 
-            console.log('Payment Verification Response:', verifyResponse.data); // Log verification response
             toast.success('Payment successful! Order placed.');
+            navigate(`/order-details/${data.order._id}`);  // Navigate to Order Details page
           } catch (error) {
-            console.error('Payment verification error:', error.response ? error.response.data : error.message);
             toast.error('Payment verification failed. Please contact support.');
           }
         },
@@ -119,7 +106,6 @@ const Checkout = () => {
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error) {
-      console.error('Payment Error:', error.response ? error.response.data : error.message); // Log the error message
       toast.error('Error processing payment.');
     }
   };
@@ -130,12 +116,10 @@ const Checkout = () => {
         Checkout
       </Typography>
 
-      {/* Display Loading Indicator */}
       {loading ? (
         <Typography variant="body1" align="center">Loading cart items...</Typography>
       ) : (
         <>
-          {/* Display Cart Items */}
           <Typography variant="h6" style={{ margin: '20px 0' }}>Your Cart Items</Typography>
           <List>
             {items.length > 0 ? (
@@ -144,7 +128,7 @@ const Checkout = () => {
                   <ListItem>
                     <ListItemText
                       primary={`${item.product.name} (x${item.quantity})`}
-                      secondary={`Price: ₹${item.product.price * item.quantity}`} // Ensure price is accessed correctly
+                      secondary={`Price: ₹${item.product.price * item.quantity}`}
                     />
                   </ListItem>
                   <Divider />
@@ -155,7 +139,6 @@ const Checkout = () => {
             )}
           </List>
 
-          {/* User Details Form */}
           <Grid container spacing={2} style={{ marginTop: '20px' }}>
             {['fullName', 'email', 'phone', 'address', 'city', 'state', 'zipCode', 'country'].map((field) => (
               <Grid item xs={12} sm={field === 'address' ? 12 : 6} key={field}>

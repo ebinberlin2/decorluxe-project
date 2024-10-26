@@ -2,7 +2,7 @@ import Order from '../../models/Order.js';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
-import Product from '../../models/ProductReviewModel.js';  // Import Product model
+import Product from '../../models/ProductReviewModel.js';  // Make sure this path is correct
 
 dotenv.config();
 
@@ -14,17 +14,28 @@ const razorpay = new Razorpay({
 // Create Order
 export const createOrder = async (req, res) => {
   const userId = req.userId;
-  const { fullName, email, phone, address, city, state, zipCode, country, items } = req.body;
+  const {
+    fullName,
+    email,
+    phone,
+    address,
+    city,
+    state,
+    zipCode,
+    country,
+    items,
+  } = req.body;
 
+  // Validate user input
   if (!fullName || !email || !phone || !address || !city || !state || !zipCode || !country || !items || items.length === 0) {
     return res.status(400).json({ message: 'All fields are required.' });
   }
 
   try {
-    // Calculate the total amount in rupees (not multiplied by 100)
-    const totalAmount = items.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+    // Calculate total amount for the order
+    const totalAmount = items.reduce((acc, item) => acc + item.product.price * item.quantity, 0) * 100; // Amount in paise
 
-    // Create a new order in the database
+    // Create a new order
     const newOrder = new Order({
       userId,
       fullName,
@@ -36,24 +47,26 @@ export const createOrder = async (req, res) => {
       zipCode,
       country,
       items,
-      totalAmount, // Save total amount as it is
+      totalAmount,
     });
 
+    // Save the order to the database
     const savedOrder = await newOrder.save();
 
-    // Create the Razorpay order with the amount in paise (multiply by 100)
+    // Create a Razorpay order
     const razorpayOrder = await razorpay.orders.create({
-      amount: totalAmount * 100, // Multiply by 100 only for Razorpay order
+      amount: totalAmount,
       currency: 'INR',
       receipt: savedOrder._id.toString(),
     });
 
-    // Save the Razorpay Order ID in the Order document
-    savedOrder.razorpayOrderId = razorpayOrder.id;
-    await savedOrder.save();
+    // Save the Razorpay order ID in the Order document
+    savedOrder.razorpayOrderId = razorpayOrder.id; // Assign the Razorpay Order ID
+    await savedOrder.save(); // Ensure to save the updated order
 
     console.log('Order created and saved with Razorpay Order ID:', savedOrder);
 
+    // Respond with success
     res.status(201).json({
       message: 'Order created successfully.',
       order: savedOrder,
@@ -65,32 +78,33 @@ export const createOrder = async (req, res) => {
   }
 };
 
-
 // Verify Payment
-
-
 export const verifyPayment = async (req, res) => {
   try {
     const { orderId, paymentId, razorpaySignature } = req.body;
 
-    // Find the order by ID and populate product details
+    console.log('Received data:', { orderId, paymentId, razorpaySignature });
+
+    // Find the order by ID
     const order = await Order.findById(orderId).populate('items.product');
     if (!order) {
+      console.error('Order not found for ID:', orderId);
       return res.status(404).json({ message: 'Order not found.' });
     }
 
-    // Check if the order has a valid Razorpay order ID
     if (!order.razorpayOrderId) {
+      console.error('Invalid Razorpay Order ID in order data:', order);
       return res.status(400).json({ message: 'Invalid order data for verification.' });
     }
 
-    // Verify the payment signature
+    // Generate a signature to compare
     const generatedSignature = crypto
       .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
       .update(`${order.razorpayOrderId}|${paymentId}`)
       .digest('hex');
 
     if (generatedSignature !== razorpaySignature) {
+      console.error('Payment verification failed. Generated signature mismatch.');
       return res.status(400).json({ message: 'Payment verification failed due to invalid signature.' });
     }
 
@@ -99,22 +113,22 @@ export const verifyPayment = async (req, res) => {
     order.paymentId = paymentId;
     await order.save();
 
-    // Update stock quantities in parallel
     const updateStockPromises = order.items.map(async (item) => {
       const product = await Product.findById(item.product._id);
       if (product) {
         if (product.stockQuantity >= item.quantity) {
           product.stockQuantity -= item.quantity;
-          await product.save();
+          await product.save({ validateBeforeSave: false }); // Skip validation if not necessary
         } else {
+          console.error('Insufficient stock for product:', product.name);
           throw new Error(`Insufficient stock for product: ${product.name}`);
         }
       } else {
+        console.error('Product not found for ID:', item.product._id);
         throw new Error(`Product not found: ${item.product._id}`);
       }
     });
 
-    // Await all stock updates
     await Promise.all(updateStockPromises);
 
     res.status(200).json({ message: 'Payment verified and stock updated successfully.', order });

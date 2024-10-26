@@ -1,12 +1,10 @@
-// routes/checkoutRoutes.js
 import express from 'express';
 import { createOrder, verifyPayment } from '../../controllers/payment/checkoutController.js';
-import authMiddleware from '../../middleware/auth.js';
+import  authMiddleware  from '../../middleware/auth.js';
 
 const router = express.Router();
 
-// Ensure this matches the endpoint being called
-router.post('/create', authMiddleware, createOrder);
-router.post('/verify-payment', authMiddleware, verifyPayment);
+router.post('/create', authMiddleware, createOrder); // Endpoint for order creation
+router.post('/verify-payment', authMiddleware, verifyPayment); // Endpoint for payment verification
 
 export default router;

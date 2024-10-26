@@ -19,7 +19,7 @@ import path from 'path';
 import sellerRoutes from './routes/Admin/sellerRoutes.js';
 import userRoutes from './routes/Admin/userRoutes.js';
 import checkoutRoutes from './routes/payment/checkoutRoutes.js';
-
+import orderRoutes from './routes/payment/orderRoutes.js';
 
 
 
@@ -50,7 +50,7 @@ app.use('/api/cart', cartRoutes); //z
 app.use('/api/admin/sellers', sellerRoutes);
 app.use('/api/admin', userRoutes); 
 app.use('/api/checkout', checkoutRoutes);
-
+app.use('/api/orders', orderRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
