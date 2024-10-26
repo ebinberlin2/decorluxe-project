@@ -2,6 +2,7 @@ import Order from '../../models/Order.js';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
+import Product from '../../models/ProductReviewModel.js';  // Import Product model
 
 dotenv.config();
 
@@ -62,36 +63,59 @@ export const createOrder = async (req, res) => {
 };
 
 // Verify Payment
-export const verifyPayment = async (req, res) => {
-  const { orderId, paymentId, razorpaySignature } = req.body;
 
+
+export const verifyPayment = async (req, res) => {
   try {
-    const order = await Order.findById(orderId);
+    const { orderId, paymentId, razorpaySignature } = req.body;
+
+    // Find the order by ID and populate product details
+    const order = await Order.findById(orderId).populate('items.product');
     if (!order) {
       return res.status(404).json({ message: 'Order not found.' });
     }
 
-    console.log('Razorpay Order ID:', order.razorpayOrderId); // Log the order's Razorpay ID
+    // Check if the order has a valid Razorpay order ID
+    if (!order.razorpayOrderId) {
+      return res.status(400).json({ message: 'Invalid order data for verification.' });
+    }
 
+    // Verify the payment signature
     const generatedSignature = crypto
       .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
       .update(`${order.razorpayOrderId}|${paymentId}`)
       .digest('hex');
 
-    console.log('Generated Signature:', generatedSignature);
-
     if (generatedSignature !== razorpaySignature) {
-      console.error('Signatures do not match.');
-      return res.status(400).json({ message: 'Payment verification failed.' });
+      return res.status(400).json({ message: 'Payment verification failed due to invalid signature.' });
     }
 
+    // Mark the order as paid
     order.paymentStatus = 'paid';
     order.paymentId = paymentId;
     await order.save();
 
-    res.status(200).json({ message: 'Payment verified successfully.', order });
+    // Update stock quantities in parallel
+    const updateStockPromises = order.items.map(async (item) => {
+      const product = await Product.findById(item.product._id);
+      if (product) {
+        if (product.stockQuantity >= item.quantity) {
+          product.stockQuantity -= item.quantity;
+          await product.save();
+        } else {
+          throw new Error(`Insufficient stock for product: ${product.name}`);
+        }
+      } else {
+        throw new Error(`Product not found: ${item.product._id}`);
+      }
+    });
+
+    // Await all stock updates
+    await Promise.all(updateStockPromises);
+
+    res.status(200).json({ message: 'Payment verified and stock updated successfully.', order });
   } catch (error) {
-    console.error('Payment verification error:', error);
-    res.status(500).json({ message: 'Error verifying payment.', error: error.message });
+    console.error('Payment verification error:', error.message);
+    res.status(500).json({ message: 'Error verifying payment and updating stock.', error: error.message });
   }
 };
