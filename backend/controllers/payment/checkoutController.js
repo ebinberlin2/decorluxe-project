@@ -21,8 +21,10 @@ export const createOrder = async (req, res) => {
   }
 
   try {
-    const totalAmount = items.reduce((acc, item) => acc + item.product.price * item.quantity, 0) * 100;
+    // Calculate the total amount in rupees (not multiplied by 100)
+    const totalAmount = items.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
 
+    // Create a new order in the database
     const newOrder = new Order({
       userId,
       fullName,
@@ -34,20 +36,21 @@ export const createOrder = async (req, res) => {
       zipCode,
       country,
       items,
-      totalAmount,
+      totalAmount, // Save total amount as it is
     });
 
     const savedOrder = await newOrder.save();
 
+    // Create the Razorpay order with the amount in paise (multiply by 100)
     const razorpayOrder = await razorpay.orders.create({
-      amount: totalAmount,
+      amount: totalAmount * 100, // Multiply by 100 only for Razorpay order
       currency: 'INR',
       receipt: savedOrder._id.toString(),
     });
 
-    // Save Razorpay Order ID in the Order document
-    savedOrder.razorpayOrderId = razorpayOrder.id; // Assign the Razorpay Order ID
-    await savedOrder.save(); // Ensure to save the updated order
+    // Save the Razorpay Order ID in the Order document
+    savedOrder.razorpayOrderId = razorpayOrder.id;
+    await savedOrder.save();
 
     console.log('Order created and saved with Razorpay Order ID:', savedOrder);
 
@@ -61,6 +64,7 @@ export const createOrder = async (req, res) => {
     res.status(500).json({ message: 'Error creating order.', error: error.message });
   }
 };
+
 
 // Verify Payment
 
