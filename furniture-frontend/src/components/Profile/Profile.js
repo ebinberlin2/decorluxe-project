@@ -1,6 +1,7 @@
 // src/components/Profile.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
     Container,
     Grid,
@@ -133,9 +134,8 @@ const Profile = () => {
                                     <ListItemText primary="Profile Details" />
                                 </ListItem>
                                 <Divider />
-                                <ListItem button>
-                                    <ListItemText primary="Order History" />
-                                </ListItem>
+                                <ListItem button component={Link} to="/order-history"> {/* Change here */}
+                                <ListItemText primary="Order History" /></ListItem>
                                 <Divider />
                                 <ListItem button>
                                     <ListItemText primary="Settings" />

@@ -24,6 +24,7 @@ import AdminUserPage from './components/Admin/AdminUserPage';
 import Checkout from './components/payment/checkout';
 import OrderDetails from './components/payment/OrderDetails';
 import SearchResultsPage from './components/search/searchResults';
+import OrderHistory from './components/Profile/OrderHistory';
 
 const App = () => (
   <Router>
@@ -50,6 +51,7 @@ const App = () => (
       <Route path="/checkout" element={<Checkout />} /> 
       <Route path="/order-details/:orderId" element={<OrderDetails />} />
       <Route path="/search" element={<><Header /><SearchResultsPage /></>} /> 
+      <Route path="/order-history" element={<><Header /><OrderHistory /></>} /> 
     </Routes>
   </Router>
 );
