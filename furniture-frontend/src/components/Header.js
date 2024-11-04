@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Header.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 const Dropdown = ({ isOpen, toggleDropdown, loggedIn, handleLogout }) => (
     <div className="dropdown-container">
@@ -50,10 +51,10 @@ const Header = () => {
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
 
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
-    };
+    const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
     useEffect(() => {
         const isLoggedIn = !!localStorage.getItem('authToken');
@@ -64,9 +65,15 @@ const Header = () => {
         localStorage.removeItem('authToken');
         setLoggedIn(false);
         toast.success("Logging out...");
-        setTimeout(() => {
-            navigate('/login');
-        }, 2000);
+        setTimeout(() => navigate('/login'), 2000);
+    };
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (!searchQuery) return;
+    
+        // Redirect to search results page with the query
+        navigate(`/search?query=${searchQuery}`);
     };
 
     return (
@@ -97,12 +104,14 @@ const Header = () => {
                     </nav>
 
                     <div className="d-flex align-items-center">
-                        <form className="search-bar">
+                        <form className="search-bar" onSubmit={handleSearch}>
                             <AiOutlineSearch size={20} className="search-icon" />
                             <input
                                 type="text"
                                 className="search-input"
                                 placeholder="Search for products, brands and more"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </form>
                         <ul className="navbar-nav ml-auto d-flex align-items-center">
@@ -129,6 +138,17 @@ const Header = () => {
                         </ul>
                     </div>
                 </div>
+                {/* Render search results */}
+                {searchResults.length > 0 && (
+                    <div className="search-results">
+                        {searchResults.map((product) => (
+                            <Link key={product._id} to={`/product/${product._id}`} className="search-result-item">
+                                <p>{product.name}</p>
+                                <p>${product.price}</p>
+                            </Link>
+                        ))}
+                    </div>
+                )}
             </header>
             <ToastContainer />
         </>

@@ -23,6 +23,8 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import AdminUserPage from './components/Admin/AdminUserPage';
 import Checkout from './components/payment/checkout';
 import OrderDetails from './components/payment/OrderDetails';
+import SearchResultsPage from './components/search/searchResults';
+
 const App = () => (
   <Router>
     
@@ -47,6 +49,7 @@ const App = () => (
       <Route path="/admin/users" element={<AdminUserPage />} /> 
       <Route path="/checkout" element={<Checkout />} /> 
       <Route path="/order-details/:orderId" element={<OrderDetails />} />
+      <Route path="/search" element={<><Header /><SearchResultsPage /></>} /> 
     </Routes>
   </Router>
 );
