@@ -57,7 +57,11 @@ export const addProduct = async (req, res) => {
 // Get all products
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const userId = req.userId; // Assuming userId is set in the request (see middleware)
+
+    // Find products where userId matches the current seller's userId
+    const products = await Product.find({ userId: userId });
+
     res.status(200).json(products);
   } catch (error) {
     console.error('Error fetching products:', error);

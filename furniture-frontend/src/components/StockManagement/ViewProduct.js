@@ -25,12 +25,33 @@ const ViewProducts = () => {
   }, []);
 
   const fetchProducts = async () => {
+    const token = localStorage.getItem('authToken'); // Assuming the token is stored in localStorage
+
     try {
-      const response = await fetch('http://localhost:5000/api/products/view');
+      const response = await fetch('http://localhost:5000/api/products/view', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Include token in the Authorization header
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
-      setProducts(data);
+
+      // Ensure data is an array
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        console.error("Unexpected data format:", data);
+        setProducts([]);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
+      setProducts([]); // Handle the error by setting products to an empty array
     }
   };
 
