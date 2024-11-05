@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Hardcoded base URL
-const BASE_URL = 'http://localhost:5000'; // Change this to your actual base URL
+const BASE_URL = 'https://decorluxe-project-backend.onrender.com'; // Change this to your actual base URL
 
 const AdminProductPage = () => {
   const [products, setProducts] = useState([]);

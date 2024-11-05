@@ -14,7 +14,7 @@ import ViewProducts from './ViewProduct';
 import ViewOrders from './ViewOrders'; // Import the new ViewOrders component
 
 // Hardcoded base URL
-const BASE_URL = 'http://localhost:5000'; // Change this to your actual base URL
+const BASE_URL = 'https://decorluxe-project-backend.onrender.com'; // Change this to your actual base URL
 
 const StockManagement = () => {
   const [activeView, setActiveView] = useState('add');

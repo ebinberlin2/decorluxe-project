@@ -12,7 +12,7 @@ function Login() {
   const navigate = useNavigate();
 
   // Define the base URL and endpoint here
-  const BASE_URL = 'http://localhost:5000';
+  const BASE_URL = 'https://decorluxe-project-backend.onrender.com';
   const LOGIN_ENDPOINT = '/api/login';
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);

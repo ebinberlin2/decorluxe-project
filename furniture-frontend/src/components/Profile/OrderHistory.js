@@ -22,7 +22,7 @@ const OrderDetails = () => {
   const [error, setError] = useState(null);
 
   // Fixed Base URL for API requests
-  const BASE_URL = 'http://localhost:5000';
+  const BASE_URL = 'https://decorluxe-project-backend.onrender.com';
 
   useEffect(() => {
     const fetchOrderDetails = async () => {

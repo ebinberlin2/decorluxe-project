@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 
 // Hardcoded base URL
-const BASE_URL = 'http://localhost:5000'; // Change this to your actual base URL
+const BASE_URL = 'https://decorluxe-project-backend.onrender.com'; // Change this to your actual base URL
 
 const ViewProducts = () => {
   const [products, setProducts] = useState([]);

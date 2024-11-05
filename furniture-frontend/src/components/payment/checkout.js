@@ -30,7 +30,7 @@ const Checkout = () => {
   const navigate = useNavigate();
 
   // Base URL without `/api`
-  const BASE_URL = 'http://localhost:5000';
+  const BASE_URL = 'https://decorluxe-project-backend.onrender.com';
   
   useEffect(() => {
     const fetchCartItems = async () => {
