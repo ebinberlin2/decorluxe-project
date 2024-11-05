@@ -1,5 +1,5 @@
 import express from "express";
-import { sendSignupOtp, verifySignupOtp } from '../controllers/signupController.js';
+import { sendSignupOtp, verifySignupOtp } from '../controllers/SignupController.js';
 
 // import  verifyToken  from "../middleware/authenticateToken.js";
 
