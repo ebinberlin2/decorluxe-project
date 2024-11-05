@@ -32,12 +32,12 @@ connectDB();
 
 
 app.use(cors(
-  { 
-    origin: ["https://decorluxe-project-1whq.vercel.app"],
-    methods: ["POST", "GET"],
-    credentials: true
+  {
+      origin: ["https://deploy-mern-frontend.vercel.app"],
+      methods: ["POST", "GET"],
+      credentials: true
   }
-)); 
+));
 app.use(express.json());
 
 mongoose.connect('mongodb+srv://admindb:1234@cluster0.chq3co9.mongodb.net/admindbase?retryWrites=true&w=majority&appName=Cluster0');
