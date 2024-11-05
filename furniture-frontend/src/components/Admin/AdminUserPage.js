@@ -1,6 +1,8 @@
-// src/components/AdminUsersPage.js
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from './AdminSidebar';
+
+// Define the base URL
+const BASE_URL = 'https://decorluxe-project-backend.onrender.com'; // Change this to your production URL when deploying
 
 const AdminUsersPage = () => {
     const [users, setUsers] = useState([]);
@@ -12,7 +14,7 @@ const AdminUsersPage = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/admin/users');
+            const response = await fetch(`${BASE_URL}/api/admin/users`); // Use the hardcoded base URL
             if (!response.ok) {
                 throw new Error('Failed to fetch users');
             }
@@ -26,7 +28,7 @@ const AdminUsersPage = () => {
 
     const updateUserStatus = async (id, newStatus) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/users/${id}/status`, {
+            const response = await fetch(`${BASE_URL}/api/admin/users/${id}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from './AdminSidebar'; // Ensure the path to AdminSidebar is correct
 
+// Define the base URL
+const BASE_URL = 'https://decorluxe-project-backend.onrender.com'; // Change this to your production URL when deploying
+
 const AdminSellersPage = () => {
   const [sellers, setSellers] = useState([]);
   const [activeSection, setActiveSection] = useState('sellers'); // Track which section is active
@@ -12,7 +15,7 @@ const AdminSellersPage = () => {
 
   const fetchSellers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/sellers');
+      const response = await fetch(`${BASE_URL}/api/admin/sellers`); // Use the hardcoded base URL
       if (!response.ok) {
         throw new Error('Failed to fetch sellers');
       }
@@ -26,7 +29,7 @@ const AdminSellersPage = () => {
 
   const updateSellerStatus = async (id, status) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/sellers/${id}`, {
+      const response = await fetch(`${BASE_URL}/api/admin/sellers/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

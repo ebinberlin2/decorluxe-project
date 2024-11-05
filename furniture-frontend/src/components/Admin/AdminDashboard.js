@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import AdminSidebar from './AdminSidebar'; // Import the sidebar component
 import 'tailwindcss/tailwind.css';
 
+const BASE_URL = 'https://decorluxe-project-backend.onrender.com'; // Hardcoded base URL without api/admin
+
 const AdminDashboard = () => {
   const [sellers, setSellers] = useState([]);
   const [products, setProducts] = useState([]);
@@ -15,7 +17,7 @@ const AdminDashboard = () => {
 
   const fetchSellers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/sellers');
+      const response = await fetch(`${BASE_URL}/api/admin/sellers`); // Complete the URL with the endpoint
       const data = await response.json();
       setSellers(data);
     } catch (error) {
@@ -25,7 +27,7 @@ const AdminDashboard = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/products');
+      const response = await fetch(`${BASE_URL}/api/admin/products`); // Complete the URL with the endpoint
       const data = await response.json();
       setProducts(data);
     } catch (error) {

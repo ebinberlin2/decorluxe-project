@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import AdminSidebar from './AdminSidebar'; // Import the sidebar
 
+// Define the base URL
+const BASE_URL = 'https://decorluxe-project-backend.onrender.com'; // Change this to your production URL when deploying
+
 const AdminProductPage = () => {
   const [products, setProducts] = useState([]);
 
@@ -12,7 +15,7 @@ const AdminProductPage = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/products');
+      const response = await fetch(`${BASE_URL}/api/admin/products`); // Use the hardcoded base URL
       const data = await response.json();
       setProducts(data);
     } catch (error) {
