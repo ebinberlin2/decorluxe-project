@@ -38,6 +38,11 @@ app.use(cors(
       credentials: true
   }
 ));
+
+app.get("/", (req, res) => {
+  res.json("Hello");
+})
+
 app.use(express.json());
 
 mongoose.connect('mongodb+srv://admindb:1234@cluster0.chq3co9.mongodb.net/admindbase?retryWrites=true&w=majority&appName=Cluster0');
