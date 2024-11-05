@@ -1,5 +1,7 @@
-// ViewOrders.js
 import React, { useEffect, useState } from 'react';
+
+// Hardcoded base URL
+const BASE_URL = 'http://localhost:5000'; // Change this to your actual base URL
 
 const ViewOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -8,7 +10,7 @@ const ViewOrders = () => {
   const fetchOrders = async () => {
     const token = localStorage.getItem('authToken'); // Use the correct token key
     try {
-      const response = await fetch('http://localhost:5000/api/seller-orders', {
+      const response = await fetch(`${BASE_URL}/api/seller-orders`, { // Use the hardcoded base URL
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

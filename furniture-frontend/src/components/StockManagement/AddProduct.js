@@ -13,6 +13,9 @@ import {
   Alert
 } from '@mui/material';
 
+// Hardcoded base URL
+const BASE_URL = 'http://localhost:5000'; // Change this to your actual base URL
+
 const categories = {
   'Furniture': [
     'Chair',
@@ -188,7 +191,7 @@ const AddProduct = () => {
   
     try {
       const token = localStorage.getItem('authToken'); // Retrieve the token
-      const response = await fetch('http://localhost:5000/api/products/add', {
+      const response = await fetch(`${BASE_URL}/api/products/add`, { // Use the hardcoded base URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -335,32 +338,32 @@ const AddProduct = () => {
               inputProps={{ min: 0 }} // Prevent negative stock
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <TextField
-              required
               id="description"
               name="description"
               label="Description"
+              fullWidth
               multiline
               rows={4}
-              fullWidth
               value={productData.description}
               onChange={handleInputChange}
+              required
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <TextField
               id="additionalDescription"
               name="additionalDescription"
               label="Additional Description"
+              fullWidth
               multiline
               rows={4}
-              fullWidth
               value={productData.additionalDescription}
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <TextField
               id="newImageUrl"
               name="newImageUrl"
@@ -368,63 +371,58 @@ const AddProduct = () => {
               fullWidth
               value={productData.newImageUrl}
               onChange={handleInputChange}
-              onKeyPress={(e) => e.key === 'Enter' && handleAddImageUrl()}
             />
-            <Button onClick={handleAddImageUrl} variant="contained" color="primary" style={{ marginTop: '8px' }}>
+            <Button variant="outlined" onClick={handleAddImageUrl}>
               Add Image
             </Button>
-            {/* Display added image URLs */}
-            <div style={{ marginTop: '8px' }}>
-              {productData.imageUrls.map((url, index) => (
-                <div key={index}>{url}</div>
-              ))}
-            </div>
           </Grid>
           <Grid item xs={12} sm={6}>
+            <Typography variant="h6">Image URLs:</Typography>
+            {productData.imageUrls.map((url, index) => (
+              <Typography key={index}>{url}</Typography>
+            ))}
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="h6">Measurements:</Typography>
             <TextField
               id="width"
               name="width"
-              label="Width (cm)"
+              label="Width"
               fullWidth
               value={productData.measurements.width}
               onChange={handleMeasurementChange}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
             <TextField
               id="height"
               name="height"
-              label="Height (cm)"
+              label="Height"
               fullWidth
               value={productData.measurements.height}
               onChange={handleMeasurementChange}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
             <TextField
               id="depth"
               name="depth"
-              label="Depth (cm)"
+              label="Depth"
               fullWidth
               value={productData.measurements.depth}
               onChange={handleMeasurementChange}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
             <TextField
               id="weight"
               name="weight"
-              label="Weight (kg)"
+              label="Weight"
               fullWidth
               value={productData.measurements.weight}
               onChange={handleMeasurementChange}
             />
           </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" type="submit">
+              Add Product
+            </Button>
+          </Grid>
         </Grid>
-
-        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '16px' }}>
-          Add Product
-        </Button>
       </form>
     </>
   );

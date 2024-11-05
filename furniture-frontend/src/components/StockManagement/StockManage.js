@@ -13,6 +13,9 @@ import AddProduct from './AddProduct';
 import ViewProducts from './ViewProduct';
 import ViewOrders from './ViewOrders'; // Import the new ViewOrders component
 
+// Hardcoded base URL
+const BASE_URL = 'http://localhost:5000'; // Change this to your actual base URL
+
 const StockManagement = () => {
   const [activeView, setActiveView] = useState('add');
 
@@ -53,9 +56,9 @@ const StockManagement = () => {
 
       <main style={{ marginLeft: 240, padding: 20, backgroundColor: theme.palette.background.default }}>
         <Toolbar />
-        {activeView === 'add' && <AddProduct />}
-        {activeView === 'view' && <ViewProducts />}
-        {activeView === 'orders' && <ViewOrders />} {/* Render ViewOrders component */}
+        {activeView === 'add' && <AddProduct baseUrl={BASE_URL} />} {/* Pass BASE_URL as prop */}
+        {activeView === 'view' && <ViewProducts baseUrl={BASE_URL} />} {/* Pass BASE_URL as prop */}
+        {activeView === 'orders' && <ViewOrders baseUrl={BASE_URL} />} {/* Pass BASE_URL as prop */}
       </main>
     </ThemeProvider>
   );

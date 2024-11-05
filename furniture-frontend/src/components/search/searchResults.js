@@ -16,6 +16,9 @@ const SearchResultsPage = () => {
   const location = useLocation(); // Get the location object
   const query = new URLSearchParams(location.search).get('query'); // Get search query from URL
 
+  // Hardcoded base URL
+  const BASE_URL = 'http://localhost:5000'; // Just the base URL
+
   useEffect(() => {
     fetchSearchResults();
   }, [query]); // Fetch results whenever the query changes
@@ -23,7 +26,7 @@ const SearchResultsPage = () => {
   const fetchSearchResults = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/search`, {
+      const response = await axios.get(`${BASE_URL}/api/search`, { // Append /api/search here
         params: { query: query }
       });
       setProducts(response.data); // Set the products returned from the search
@@ -66,7 +69,7 @@ const SearchResultsPage = () => {
     const token = localStorage.getItem('authToken'); // Get token from local storage
 
     try {
-      const response = await axios.post('http://localhost:5000/api/cart', {
+      const response = await axios.post(`${BASE_URL}/api/cart`, { // Append /api/cart here
         productId,
         quantity: 1, // Assuming 1 item for simplicity
       }, {
@@ -89,7 +92,7 @@ const SearchResultsPage = () => {
     const token = localStorage.getItem('authToken'); // Get token from local storage
 
     try {
-      const response = await axios.post('http://localhost:5000/api/wishlist', {
+      const response = await axios.post(`${BASE_URL}/api/wishlist`, { // Append /api/wishlist here
         productId,
       }, {
         headers: {

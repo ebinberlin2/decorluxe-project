@@ -31,21 +31,13 @@ connectDB();
 
 
 
-app.use(cors(
-  {
-      origin: ["https://deploy-mern-frontend.vercel.app"],
-      methods: ["POST", "GET"],
-      credentials: true
-  }
-));
+app.use(cors());
 
-app.get("/", (req, res) => {
-  res.json("Hello");
-})
+
 
 app.use(express.json());
 
-mongoose.connect('mongodb+srv://admindb:1234@cluster0.chq3co9.mongodb.net/admindbase?retryWrites=true&w=majority&appName=Cluster0');
+
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 

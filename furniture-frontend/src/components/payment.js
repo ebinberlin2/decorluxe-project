@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+// Hardcoded base URL without the /api part
+const BASE_URL = 'http://localhost:5000'; 
+
 const RazorpayCheckout = ({ totalAmount }) => {
   const [loading, setLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -31,7 +34,7 @@ const RazorpayCheckout = ({ totalAmount }) => {
 
     try {
       // Step 1: Create an order on the backend
-      const { data } = await axios.post('http://localhost:5000/api/create-order', {
+      const { data } = await axios.post(`${BASE_URL}/api/create-order`, {
         amount: totalAmount,
       });
 

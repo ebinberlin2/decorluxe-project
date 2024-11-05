@@ -20,6 +20,11 @@ function UserSignup() {
   const [email, setEmail] = useState(''); // Email for OTP submission
   const navigate = useNavigate();
 
+  // Define base URL and endpoints
+  const BASE_URL = 'http://localhost:5000';
+  const SEND_OTP_ENDPOINT = '/api/user/signup/send-otp';
+  const VERIFY_OTP_ENDPOINT = '/api/user/signup/verify-otp';
+
   // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,7 +50,7 @@ function UserSignup() {
 
     try {
       // API call to send OTP
-      const response = await axios.post('http://localhost:5000/api/user/signup/send-otp', formData, {
+      const response = await axios.post(`${BASE_URL}${SEND_OTP_ENDPOINT}`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -77,7 +82,7 @@ function UserSignup() {
 
     try {
       // API call to verify OTP
-      const response = await axios.post('http://localhost:5000/api/user/signup/verify-otp', { email, otp }, {
+      const response = await axios.post(`${BASE_URL}${VERIFY_OTP_ENDPOINT}`, { email, otp }, {
         headers: {
           'Content-Type': 'application/json',
         },

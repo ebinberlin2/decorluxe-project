@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 
+// Hardcoded base URL
+const BASE_URL = 'http://localhost:5000'; // Change this to your actual base URL
+
 const AdminDashboard = () => {
   const [sellers, setSellers] = useState([]);
   const [products, setProducts] = useState([]);
@@ -14,7 +17,7 @@ const AdminDashboard = () => {
 
   const fetchSellers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/sellers');
+      const response = await fetch(`${BASE_URL}/api/admin/sellers`); // Use the hardcoded base URL
       const data = await response.json();
       setSellers(data);
     } catch (error) {
@@ -24,7 +27,7 @@ const AdminDashboard = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/products');
+      const response = await fetch(`${BASE_URL}/api/admin/products`); // Use the hardcoded base URL
       const data = await response.json();
       setProducts(data);
     } catch (error) {

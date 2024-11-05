@@ -14,6 +14,9 @@ import {
   TextField,
 } from '@mui/material';
 
+// Hardcoded base URL
+const BASE_URL = 'http://localhost:5000'; // Change this to your actual base URL
+
 const ViewProducts = () => {
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
@@ -29,7 +32,7 @@ const ViewProducts = () => {
     const token = localStorage.getItem('authToken'); // Assuming the token is stored in localStorage
 
     try {
-      const response = await fetch('http://localhost:5000/api/products/seller-products', { // Adjust endpoint to seller-specific route
+      const response = await fetch(`${BASE_URL}/api/products/seller-products`, { // Use the hardcoded base URL
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`, // Include token in the Authorization header
@@ -112,7 +115,7 @@ const ViewProducts = () => {
   const handleUpdateProduct = async () => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`http://localhost:5000/api/products/edit/${selectedProduct._id}`, {
+      const response = await fetch(`${BASE_URL}/api/products/edit/${selectedProduct._id}`, { // Use the hardcoded base URL
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

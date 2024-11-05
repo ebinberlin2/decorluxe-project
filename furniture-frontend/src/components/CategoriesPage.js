@@ -6,6 +6,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
+// Hardcoded base URL
+const BASE_URL = 'http://localhost:5000'; // Change this to your actual base URL
+
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +24,7 @@ const ProductPage = () => {
   const fetchProducts = async () => {
     const token = localStorage.getItem('authToken'); // Get token from local storage
     try {
-      const response = await fetch('http://localhost:5000/api/products/view', {
+      const response = await fetch(`${BASE_URL}/api/products/view`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`, // Include token in headers
@@ -80,7 +83,7 @@ const ProductPage = () => {
     const token = localStorage.getItem('authToken'); // Get token from local storage
 
     try {
-      const response = await axios.post('http://localhost:5000/api/cart', {
+      const response = await axios.post(`${BASE_URL}/api/cart`, {
         productId,
         quantity: 1, // Assuming 1 item for simplicity
       }, {
@@ -104,7 +107,7 @@ const ProductPage = () => {
     const token = localStorage.getItem('authToken'); // Get token from local storage
 
     try {
-      const response = await axios.post('http://localhost:5000/api/wishlist', {
+      const response = await axios.post(`${BASE_URL}/api/wishlist`, {
         productId,
       }, {
         headers: {
@@ -172,7 +175,7 @@ const ProductPage = () => {
               <button className="wishlist-btn" onClick={() => addToWishlist(product._id)}>
                 <FaHeart /> Wishlist
               </button>
-              <button id="addCart"className="cart-btn" onClick={() => addToCart(product._id)}>
+              <button id="addCart" className="cart-btn" onClick={() => addToCart(product._id)}>
                 <FaShoppingCart /> Add to Cart
               </button>
             </div>

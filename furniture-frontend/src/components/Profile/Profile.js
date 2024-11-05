@@ -1,7 +1,6 @@
 // src/components/Profile.js
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
     Container,
     Grid,
@@ -16,6 +15,7 @@ import {
     CssBaseline,
     createTheme,
     ThemeProvider,
+    CircularProgress,
 } from '@mui/material';
 
 const theme = createTheme({
@@ -25,8 +25,9 @@ const theme = createTheme({
 });
 
 const Profile = () => {
-    const [userProfile, setUserProfile] = useState(null); // Store user profile data
+    const [userProfile, setUserProfile] = useState(null);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [fullName, setFullName] = useState('');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
@@ -36,11 +37,13 @@ const Profile = () => {
     const [dateOfBirth, setDateOfBirth] = useState('');
     const navigate = useNavigate();
 
-    // Fetch user profile data on component load
+    // Hardcoded base URL without the /api
+    const BASE_URL = 'http://localhost:5000'; // Just the base URL
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/userDetails', {
+                const response = await fetch(`${BASE_URL}/api/userDetails`, { // Append /api/userDetails here
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -57,22 +60,24 @@ const Profile = () => {
                 }
 
                 const profileData = await response.json();
-                setUserProfile(profileData); // Store user profile data
-                setFullName(profileData.fullName || ''); // Pre-fill fields
+                setUserProfile(profileData);
+                setFullName(profileData.fullName || '');
                 setAddress(profileData.address || '');
                 setCity(profileData.city || '');
                 setDistrict(profileData.district || '');
                 setState(profileData.state || '');
                 setPhone(profileData.phone || '');
-                setDateOfBirth(profileData.dateOfBirth ? profileData.dateOfBirth.split('T')[0] : ''); // Date in YYYY-MM-DD format
+                setDateOfBirth(profileData.dateOfBirth ? profileData.dateOfBirth.split('T')[0] : '');
             } catch (error) {
                 console.error("Error fetching user profile:", error);
                 setError("Failed to load user profile. Please try again later.");
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchUserProfile();
-    }, [navigate]);
+    }, [navigate, BASE_URL]);
 
     const handleLogout = () => {
         localStorage.removeItem('authToken');
@@ -83,7 +88,7 @@ const Profile = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:5000/api/userDetails', {
+            const response = await fetch(`${BASE_URL}/api/userDetails`, { // Append /api/userDetails here
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -112,6 +117,10 @@ const Profile = () => {
         }
     };
 
+    if (loading) {
+        return <CircularProgress color="inherit" />;
+    }
+
     if (error) {
         return <Typography color="error" align="center">{error}</Typography>;
     }
@@ -134,8 +143,9 @@ const Profile = () => {
                                     <ListItemText primary="Profile Details" />
                                 </ListItem>
                                 <Divider />
-                                <ListItem button component={Link} to="/order-history"> {/* Change here */}
-                                <ListItemText primary="Order History" /></ListItem>
+                                <ListItem button component={Link} to="/order-history">
+                                    <ListItemText primary="Order History" />
+                                </ListItem>
                                 <Divider />
                                 <ListItem button>
                                     <ListItemText primary="Settings" />

@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
 
 const Checkout = () => {
   const [userDetails, setUserDetails] = useState({
@@ -25,12 +25,13 @@ const Checkout = () => {
     zipCode: '',
     country: '',
   });
-
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();  // Initialize navigate
+  const navigate = useNavigate();
 
-  // Function to fetch cart items
+  // Base URL without `/api`
+  const BASE_URL = 'http://localhost:5000';
+  
   useEffect(() => {
     const fetchCartItems = async () => {
       const token = localStorage.getItem('authToken');
@@ -41,10 +42,9 @@ const Checkout = () => {
       }
 
       try {
-        const { data } = await axios.get('http://localhost:5000/api/cart', {
+        const { data } = await axios.get(`${BASE_URL}/api/cart`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         if (Array.isArray(data) && data.length > 0) {
           setItems(data);
         } else {
@@ -70,7 +70,7 @@ const Checkout = () => {
     try {
       const orderData = { ...userDetails, items };
 
-      const { data } = await axios.post('http://localhost:5000/api/checkout/create', orderData, {
+      const { data } = await axios.post(`${BASE_URL}/api/checkout/create`, orderData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -83,14 +83,14 @@ const Checkout = () => {
         order_id: data.razorpayOrderId,
         handler: async (response) => {
           try {
-            const verifyResponse = await axios.post('http://localhost:5000/api/checkout/verify-payment', {
+            const verifyResponse = await axios.post(`${BASE_URL}/api/checkout/verify-payment`, {
               orderId: data.order._id,
               paymentId: response.razorpay_payment_id,
               razorpaySignature: response.razorpay_signature,
             }, { headers: { Authorization: `Bearer ${token}` } });
 
             toast.success('Payment successful! Order placed.');
-            navigate(`/order-details/${data.order._id}`);  // Navigate to Order Details page
+            navigate(`/order-details/${data.order._id}`);
           } catch (error) {
             toast.error('Payment verification failed. Please contact support.');
           }

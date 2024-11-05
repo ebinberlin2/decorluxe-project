@@ -1,4 +1,3 @@
-// SellerSignup.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Signup.css'; // Assuming you have a CSS file for styling
@@ -19,6 +18,11 @@ const SellerSignup = () => {
   const [step, setStep] = useState(1); // Step 1: Signup Form, Step 2: OTP Verification
   const [email, setEmail] = useState(''); // Save email for OTP verification
   const navigate = useNavigate();
+
+  // Define base URL and endpoints
+  const BASE_URL = 'http://localhost:5000';
+  const SEND_OTP_ENDPOINT = '/api/seller/signup/send-otp';
+  const VERIFY_OTP_ENDPOINT = '/api/seller/signup/verify-otp';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,7 +59,7 @@ const SellerSignup = () => {
 
     try {
       // Send signup data and request OTP
-      const response = await axios.post('http://localhost:5000/api/seller/signup/send-otp', formData, {
+      const response = await axios.post(`${BASE_URL}${SEND_OTP_ENDPOINT}`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -76,7 +80,7 @@ const SellerSignup = () => {
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/seller/signup/verify-otp', { email, otp }, {
+      const response = await axios.post(`${BASE_URL}${VERIFY_OTP_ENDPOINT}`, { email, otp }, {
         headers: {
           'Content-Type': 'application/json',
         },

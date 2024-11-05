@@ -5,6 +5,9 @@ import { FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import './Cart.css'; // Import the new design
 
+// Hardcoded base URL
+const BASE_URL = 'http://localhost:5000'; // Change this to your actual base URL
+
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +22,7 @@ const Cart = () => {
     const token = localStorage.getItem('authToken');
 
     try {
-      const response = await axios.get('http://localhost:5000/api/cart', {
+      const response = await axios.get(`${BASE_URL}/api/cart`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCartItems(response.data);
@@ -35,7 +38,7 @@ const Cart = () => {
     const token = localStorage.getItem('authToken');
 
     try {
-      await axios.delete(`http://localhost:5000/api/cart/${cartItemId}`, {
+      await axios.delete(`${BASE_URL}/api/cart/${cartItemId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCartItems((prevItems) => prevItems.filter((item) => item._id !== cartItemId));

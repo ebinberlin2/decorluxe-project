@@ -11,6 +11,10 @@ function Login() {
   const [isSubmitting, setIsSubmitting] = useState(false); 
   const navigate = useNavigate();
 
+  // Define the base URL and endpoint here
+  const BASE_URL = 'http://localhost:5000';
+  const LOGIN_ENDPOINT = '/api/login';
+
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const validatePassword = (password) => password.length >= 6;
 
@@ -37,17 +41,17 @@ function Login() {
     setIsSubmitting(true); 
   
     try {
-      const response = await axios.post('http://localhost:5000/api/login', formData);
+      const response = await axios.post(`${BASE_URL}${LOGIN_ENDPOINT}`, formData);
   
       if (response.status === 200) {
         const { token, role } = response.data;
-        console.log('User Role:', role); // Log the role to verify it
+        console.log('User Role:', role);
         localStorage.setItem('authToken', token);
   
         toast.success("Login successful!", { position: "top-center", autoClose: 3000 });
   
         setTimeout(() => {
-          console.log(`Redirecting to ${role}`); // Log the redirection target
+          console.log(`Redirecting to ${role}`);
           if (role.toLowerCase() === 'admin') {
             navigate('/admin');
           } else if (role.toLowerCase() === 'seller') {
@@ -77,10 +81,6 @@ function Login() {
       <div className="right-section">
         <div className="form-container">
           <h2>Welcome Back! <br /><span>so you can do more</span></h2>
-          {/* <button className="google-login-button" disabled={isSubmitting}>
-            <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo" />
-            Login with Google
-          </button> */}
           <p className="or-text">login with e-mail</p>
           <form className="login-form" onSubmit={handleSubmit}>
             <input
@@ -94,7 +94,7 @@ function Login() {
             />
             {errors.email && <p className="error-text">{errors.email}</p>}
             <input
-            id='password'
+              id='password'
               type="password"
               name="password"
               placeholder="Password"

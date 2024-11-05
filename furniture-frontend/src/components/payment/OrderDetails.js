@@ -18,15 +18,17 @@ const OrderDetails = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
 
+  // Base URL for API requests
+  const BASE_URL = 'http://localhost:5000';
+
   useEffect(() => {
     const fetchOrderDetails = async () => {
       const token = localStorage.getItem('authToken');
 
       try {
-        const { data } = await axios.get(`http://localhost:5000/api/orders/${orderId}`, {
+        const { data } = await axios.get(`${BASE_URL}/api/orders/${orderId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         setOrder(data);
       } catch (error) {
         toast.error('Failed to load order details.');
@@ -115,7 +117,7 @@ const OrderDetails = () => {
                 }}
               >
                 <Avatar
-                  src={item.product.imageUrls || 'https://via.placeholder.com/150'}
+                  src={item.product.imageUrls.length > 0 ? item.product.imageUrls[0] : 'https://via.placeholder.com/150'}
                   alt={item.product.name}
                   variant="square"
                   sx={{

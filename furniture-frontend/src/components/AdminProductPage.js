@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+// Hardcoded base URL
+const BASE_URL = 'http://localhost:5000'; // Change this to your actual base URL
+
 const AdminProductPage = () => {
   const [products, setProducts] = useState([]);
 
@@ -10,7 +13,7 @@ const AdminProductPage = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/products');
+      const response = await fetch(`${BASE_URL}/api/admin/products`); // Use the hardcoded base URL
       const data = await response.json();
       setProducts(data);
     } catch (error) {

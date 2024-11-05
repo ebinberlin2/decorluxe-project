@@ -5,6 +5,9 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './WishlistPage.css'; // Importing the CSS
 
+// Hardcoded base URL
+const BASE_URL = 'http://localhost:5000';
+
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +20,7 @@ const Wishlist = () => {
   const fetchWishlist = async () => {
     const token = localStorage.getItem('authToken');
     try {
-      const response = await axios.get('http://localhost:5000/api/wishlist', {
+      const response = await axios.get(`${BASE_URL}/api/wishlist`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -30,12 +33,11 @@ const Wishlist = () => {
       setLoading(false);
     }
   };
-  
 
   const removeFromWishlist = async (wishlistItemId) => {
     const token = localStorage.getItem('authToken');
     try {
-      await axios.delete(`http://localhost:5000/api/wishlist/${wishlistItemId}`, {
+      await axios.delete(`${BASE_URL}/api/wishlist/${wishlistItemId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -62,7 +64,7 @@ const Wishlist = () => {
             {wishlistItems.map((item) => (
               <div className="wishlist-card" key={item._id}>
                 <img
-                  src={item.product.imageUrls || 'https://via.placeholder.com/400x300.png?text=Product+Image'}
+                  src={item.product.imageUrls[0] || 'https://via.placeholder.com/400x300.png?text=Product+Image'}
                   className="wishlist-image"
                   alt={item.product.name}
                 />

@@ -22,6 +22,9 @@ import { FaCartPlus, FaHeart } from 'react-icons/fa';
 import 'react-toastify/dist/ReactToastify.css';
 import './ProductDetails.css';
 
+// Hardcoded base URL
+const BASE_URL = 'http://localhost:5000'; 
+
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -34,7 +37,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+        const response = await axios.get(`${BASE_URL}/api/products/${id}`);
         setProduct(response.data);
         setSelectedImage(response.data.imageUrls[0]);
       } catch (error) {
@@ -57,7 +60,7 @@ const ProductDetails = () => {
     const token = localStorage.getItem('authToken');
   
     try {
-      const response = await axios.post('http://localhost:5000/api/cart', {
+      const response = await axios.post(`${BASE_URL}/api/cart`, {
         productId: product._id,
         quantity,
       }, {
@@ -82,7 +85,7 @@ const ProductDetails = () => {
     const token = localStorage.getItem('authToken');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/wishlist', {
+      const response = await axios.post(`${BASE_URL}/api/wishlist`, {
         productId: product._id,
       }, {
         headers: {
