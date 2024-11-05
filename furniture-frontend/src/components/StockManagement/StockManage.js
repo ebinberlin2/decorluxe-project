@@ -8,11 +8,10 @@ import {
   ListItem,
   ListItemText,
   Toolbar,
-  AppBar,
-  Typography,
 } from '@mui/material';
 import AddProduct from './AddProduct';
 import ViewProducts from './ViewProduct';
+import ViewOrders from './ViewOrders'; // Import the new ViewOrders component
 
 const StockManagement = () => {
   const [activeView, setActiveView] = useState('add');
@@ -23,10 +22,10 @@ const StockManagement = () => {
 
   const theme = createTheme({
     palette: {
-      mode: 'dark', // Set the theme mode to dark
+      mode: 'dark',
       background: {
-        default: '#121212', // Dark background
-        paper: '#1E1E1E', // Paper background for cards and drawers
+        default: '#121212',
+        paper: '#1E1E1E',
       },
     },
   });
@@ -34,13 +33,6 @@ const StockManagement = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {/* <AppBar position="fixed">
-        <Toolbar>
-          <Typography variant="h6" noWrap>
-            Stock Management
-          </Typography>
-        </Toolbar>
-      </AppBar> */}
 
       <Drawer variant="permanent" anchor="left">
         <Toolbar />
@@ -52,6 +44,9 @@ const StockManagement = () => {
             <ListItem button onClick={() => handleViewChange('view')}>
               <ListItemText primary="View Products" primaryTypographyProps={{ style: { color: '#ffffff' } }} />
             </ListItem>
+            <ListItem button onClick={() => handleViewChange('orders')}> {/* New View Orders button */}
+              <ListItemText primary="View Orders" primaryTypographyProps={{ style: { color: '#ffffff' } }} />
+            </ListItem>
           </List>
         </div>
       </Drawer>
@@ -60,6 +55,7 @@ const StockManagement = () => {
         <Toolbar />
         {activeView === 'add' && <AddProduct />}
         {activeView === 'view' && <ViewProducts />}
+        {activeView === 'orders' && <ViewOrders />} {/* Render ViewOrders component */}
       </main>
     </ThemeProvider>
   );

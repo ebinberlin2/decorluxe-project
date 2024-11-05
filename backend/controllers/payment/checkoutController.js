@@ -2,7 +2,7 @@ import Order from '../../models/Order.js';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
-import Product from '../../models/ProductReviewModel.js';  // Make sure this path is correct
+import Product from '../../models/ProductReviewModel.js';  // Ensure this path is correct
 
 dotenv.config();
 
@@ -32,8 +32,30 @@ export const createOrder = async (req, res) => {
   }
 
   try {
+    // Validate and structure items
+    const validatedItems = await Promise.all(items.map(async (item) => {
+      const product = await Product.findById(item.product); // Look up product by ID
+      if (!product) {
+        throw new Error(`Product not found for ID: ${item.product}`);
+      }
+      return {
+        product: product._id, // Ensure we are storing the correct product ID
+        quantity: item.quantity,
+        price: product.price, // Capture the product price
+      };
+    }));
+
     // Calculate total amount for the order
-    const totalAmount = items.reduce((acc, item) => acc + item.product.price * item.quantity, 0) * 100; // Amount in paise
+    const totalAmount = validatedItems.reduce((acc, item) => {
+      const itemTotal = item.price * item.quantity; // Calculate total for each item
+      console.log(`Item: ${item.product}, Quantity: ${item.quantity}, Item Total: ${itemTotal}`); // Log item details
+      return acc + itemTotal;
+    }, 0) * 100; // Amount in paise
+
+    // Check for valid totalAmount
+    if (isNaN(totalAmount) || totalAmount < 0) {
+      throw new Error('Calculated total amount is invalid.');
+    }
 
     // Create a new order
     const newOrder = new Order({
@@ -46,7 +68,7 @@ export const createOrder = async (req, res) => {
       state,
       zipCode,
       country,
-      items,
+      items: validatedItems, // Use validated items
       totalAmount,
     });
 
@@ -73,7 +95,7 @@ export const createOrder = async (req, res) => {
       razorpayOrderId: razorpayOrder.id,
     });
   } catch (error) {
-    console.error('Error creating order:', error);
+    console.error('Error creating order:', error.message);
     res.status(500).json({ message: 'Error creating order.', error: error.message });
   }
 };
@@ -113,8 +135,9 @@ export const verifyPayment = async (req, res) => {
     order.paymentId = paymentId;
     await order.save();
 
+    // Update stock quantities
     const updateStockPromises = order.items.map(async (item) => {
-      const product = await Product.findById(item.product._id);
+      const product = await Product.findById(item.product);
       if (product) {
         if (product.stockQuantity >= item.quantity) {
           product.stockQuantity -= item.quantity;
@@ -124,8 +147,8 @@ export const verifyPayment = async (req, res) => {
           throw new Error(`Insufficient stock for product: ${product.name}`);
         }
       } else {
-        console.error('Product not found for ID:', item.product._id);
-        throw new Error(`Product not found: ${item.product._id}`);
+        console.error('Product not found for ID:', item.product);
+        throw new Error(`Product not found: ${item.product}`);
       }
     });
 

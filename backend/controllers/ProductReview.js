@@ -57,10 +57,8 @@ export const addProduct = async (req, res) => {
 // Get all products
 export const getAllProducts = async (req, res) => {
   try {
-    const userId = req.userId; // Assuming userId is set in the request (see middleware)
-
-    // Find products where userId matches the current seller's userId
-    const products = await Product.find({ userId: userId });
+    // Fetch all products
+    const products = await Product.find({}); // Retrieve all products from the database
 
     res.status(200).json(products);
   } catch (error) {
@@ -152,5 +150,19 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({
       error: 'Failed to delete product. Please try again later.',
     });
+  }
+};
+
+export const getProductsBySeller = async (req, res) => {
+  try {
+    const sellerId = req.userId; // Retrieve userId from the auth middleware
+
+    // Find products where userId matches the logged-in seller's ID
+    const products = await Product.find({ userId: sellerId });
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Error fetching products for seller:', error);
+    res.status(500).json({ message: 'Server error while fetching products' });
   }
 };

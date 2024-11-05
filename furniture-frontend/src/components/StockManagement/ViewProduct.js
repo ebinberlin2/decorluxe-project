@@ -24,11 +24,12 @@ const ViewProducts = () => {
     fetchProducts();
   }, []);
 
+  // Fetch products specific to the seller
   const fetchProducts = async () => {
     const token = localStorage.getItem('authToken'); // Assuming the token is stored in localStorage
 
     try {
-      const response = await fetch('http://localhost:5000/api/products/view', {
+      const response = await fetch('http://localhost:5000/api/products/seller-products', { // Adjust endpoint to seller-specific route
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`, // Include token in the Authorization header
@@ -55,17 +56,20 @@ const ViewProducts = () => {
     }
   };
 
+  // Opens the dialog and initializes the data for editing
   const handleOpenEditDialog = (product) => {
     setSelectedProduct(product);
-    setUpdatedData(product); // Initialize updatedData with the product to edit
+    setUpdatedData({ ...product, imageUrls: [...product.imageUrls] }); // Ensure imageUrls is copied properly
     setOpen(true);
   };
 
+  // Closes the edit dialog
   const handleCloseEditDialog = () => {
     setOpen(false);
     setSelectedProduct(null);
   };
 
+  // Handles changes in text inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUpdatedData((prevData) => ({
@@ -74,6 +78,7 @@ const ViewProducts = () => {
     }));
   };
 
+  // Handles changes in each individual image URL
   const handleImageUrlChange = (index, value) => {
     const newImageUrls = [...updatedData.imageUrls];
     newImageUrls[index] = value;
@@ -83,6 +88,7 @@ const ViewProducts = () => {
     }));
   };
 
+  // Adds a new image URL input field
   const handleAddImageUrlField = () => {
     setUpdatedData((prevData) => ({
       ...prevData,
@@ -90,6 +96,7 @@ const ViewProducts = () => {
     }));
   };
 
+  // Handles measurement fields
   const handleMeasurementChange = (e) => {
     const { name, value } = e.target;
     setUpdatedData((prevData) => ({
@@ -101,12 +108,15 @@ const ViewProducts = () => {
     }));
   };
 
+  // Updates the product
   const handleUpdateProduct = async () => {
     try {
+      const token = localStorage.getItem('authToken');
       const response = await fetch(`http://localhost:5000/api/products/edit/${selectedProduct._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Ensure token is included in PUT request
         },
         body: JSON.stringify(updatedData),
       });
@@ -115,7 +125,7 @@ const ViewProducts = () => {
         // Update the local state with the updated product
         setProducts((prevProducts) =>
           prevProducts.map((product) =>
-            product._id === selectedProduct._id ? updatedData : product
+            product._id === selectedProduct._id ? { ...updatedData, _id: selectedProduct._id } : product
           )
         );
         handleCloseEditDialog();

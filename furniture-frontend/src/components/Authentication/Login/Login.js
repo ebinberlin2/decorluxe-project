@@ -77,13 +77,14 @@ function Login() {
       <div className="right-section">
         <div className="form-container">
           <h2>Welcome Back! <br /><span>so you can do more</span></h2>
-          <button className="google-login-button" disabled={isSubmitting}>
+          {/* <button className="google-login-button" disabled={isSubmitting}>
             <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo" />
             Login with Google
-          </button>
-          <p className="or-text">Or login with e-mail</p>
+          </button> */}
+          <p className="or-text">login with e-mail</p>
           <form className="login-form" onSubmit={handleSubmit}>
             <input
+              id='email'
               type="email"
               name="email"
               placeholder="E-mail"
@@ -93,6 +94,7 @@ function Login() {
             />
             {errors.email && <p className="error-text">{errors.email}</p>}
             <input
+            id='password'
               type="password"
               name="password"
               placeholder="Password"
@@ -102,7 +104,7 @@ function Login() {
             />
             {errors.password && <p className="error-text">{errors.password}</p>}
             <a href="/" className="forgot-password">Forgot password?</a>
-            <button type="submit" className="login-button" disabled={isSubmitting}>
+            <button id ="login" type="submit" className="login-button" disabled={isSubmitting}>
               {isSubmitting ? 'Logging in...' : 'Login'}
             </button>
           </form>

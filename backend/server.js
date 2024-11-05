@@ -22,7 +22,7 @@ import checkoutRoutes from './routes/payment/checkoutRoutes.js';
 import orderRoutes from './routes/payment/orderRoutes.js';
 import searchRoutes from './routes/search/searchRoutes.js';
 import allOrderRoutes from './routes/profile/allOrderRoutes.js';
-
+import orderViewRoutes from './routes/seller/orderViewRoutes.js';
 
 
 const app = express();
@@ -54,6 +54,7 @@ app.use('/api/checkout', checkoutRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/user-orders', allOrderRoutes); 
+app.use('/api/seller-orders', orderViewRoutes)
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

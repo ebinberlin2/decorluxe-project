@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './CategoriesPage.css';
 import { FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
-import { Link } from 'react-router-dom'; // Import Link for navigation
-import { ToastContainer, toast } from 'react-toastify'; // Import Toast for notifications
+import { Link, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
@@ -12,14 +12,29 @@ const ProductPage = () => {
   const [error, setError] = useState(null);
   const [sortOrder, setSortOrder] = useState('default'); // State for sorting
   const [filter, setFilter] = useState('all'); // State for filtering
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
+    const token = localStorage.getItem('authToken'); // Get token from local storage
     try {
-      const response = await fetch('http://localhost:5000/api/products/view');
+      const response = await fetch('http://localhost:5000/api/products/view', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`, // Include token in headers
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 401) {
+        toast.error('You are not authorized. Please log in.', { position: 'top-center' });
+        navigate('/login'); // Redirect to login if unauthorized
+        return;
+      }
+
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       console.log('Fetched products:', data); // Debug: Check fetched data
@@ -77,6 +92,7 @@ const ProductPage = () => {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         toast.error('You are not authorized. Please log in.', { position: 'top-center' });
+        navigate('/login'); // Redirect to login if unauthorized
       } else {
         toast.error('Error adding product to cart', { position: 'top-center' });
       }
@@ -99,6 +115,7 @@ const ProductPage = () => {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         toast.error('You are not authorized. Please log in.', { position: 'top-center' });
+        navigate('/login'); // Redirect to login if unauthorized
       } else {
         toast.error('Error adding product to wishlist', { position: 'top-center' });
       }
@@ -155,7 +172,7 @@ const ProductPage = () => {
               <button className="wishlist-btn" onClick={() => addToWishlist(product._id)}>
                 <FaHeart /> Wishlist
               </button>
-              <button className="cart-btn" onClick={() => addToCart(product._id)}>
+              <button id="addCart"className="cart-btn" onClick={() => addToCart(product._id)}>
                 <FaShoppingCart /> Add to Cart
               </button>
             </div>

@@ -89,7 +89,7 @@ const Header = () => {
                     <nav className="navbar-nav mx-auto">
                         <ul className="nav d-flex align-items-center">
                             <li className="nav-item">
-                                <Link to="/products" className="nav-link">FURNITURE</Link>
+                                <Link to="/products" id="furniture" className="nav-link">FURNITURE</Link>
                             </li>
                             <li className="nav-item">
                                 <Link to="/lighting" className="nav-link">LIGHTING</Link>
@@ -107,6 +107,7 @@ const Header = () => {
                         <form className="search-bar" onSubmit={handleSearch}>
                             <AiOutlineSearch size={20} className="search-icon" />
                             <input
+                                id="searchBox"
                                 type="text"
                                 className="search-input"
                                 placeholder="Search for products, brands and more"
